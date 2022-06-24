@@ -4,7 +4,20 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
+    public class GramCollection
+    {
+        public int LT = 0;
+        public int MT = 0;
+        public int ST = 0;
+        public int S = 0;
+        public int P = 0;
+    }
+
+
     public GridManager gm;
+
+    public GramCollection p1 = new GramCollection();
+    public GramCollection p2 = new GramCollection();
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +39,11 @@ public class GameState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // construction
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            Debug.Log(tilemapPos);
+        }
     }
 }
