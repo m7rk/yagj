@@ -14,12 +14,15 @@ public class MoveSystem : MonoBehaviour
     private Vector3 resetPostition;
     private Quaternion resetRotation;
 
+    CompletePuzzle completePuzzle;
+
     [SerializeField]
     private float errorMarginDrop = 0.5f;
 
     void Start()
     {
         resetPostition = this.transform.localPosition;
+        completePuzzle = GameObject.FindGameObjectWithTag("PointsHandler").GetComponent<CompletePuzzle>();
     }
 
     void Update()
@@ -47,6 +50,7 @@ public class MoveSystem : MonoBehaviour
                     //this.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, -45.0f));
                     this.transform.Rotate(new Vector3(0.0f, 0.0f, -0.1f));
                 }
+
             }
 
         }
@@ -80,6 +84,10 @@ public class MoveSystem : MonoBehaviour
         {
             this.transform.position = new Vector3(correctForm.transform.position.x, correctForm.transform.position.y, correctForm.transform.position.z);
             this.transform.rotation = correctForm.transform.rotation;
+
+            completePuzzle.AddPoints();
+
+            //completePuzzle.AddPoints();
 
             finish = true;
         }
