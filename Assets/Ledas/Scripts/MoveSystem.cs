@@ -12,6 +12,10 @@ public class MoveSystem : MonoBehaviour
     private float startPosY;
 
     private Vector3 resetPostition;
+    private Quaternion resetRotation;
+
+    [SerializeField]
+    private float errorMarginDrop = 0.5f;
 
     void Start()
     {
@@ -23,7 +27,6 @@ public class MoveSystem : MonoBehaviour
         if (!finish)
         {
             if (moving)
-
             {
                 Vector3 mousePos;
                 mousePos = Input.mousePosition;
@@ -32,7 +35,20 @@ public class MoveSystem : MonoBehaviour
                 // allows to drag the sprite around the world using its local position
                 this.gameObject.transform.localPosition =
                     new Vector3(mousePos.x - startPosX, mousePos.y - startPosY, this.gameObject.transform.localPosition.z);
+
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    //this.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 45.0f));
+                    this.transform.Rotate(new Vector3(0.0f, 0.0f, 0.1f));
+                }
+
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    //this.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, -45.0f));
+                    this.transform.Rotate(new Vector3(0.0f, 0.0f, -0.1f));
+                }
             }
+
         }
        
     }
@@ -59,15 +75,18 @@ public class MoveSystem : MonoBehaviour
         // if the shape moves near a radius of the correct form, snap it,
         // else reset the position
 
-        if (Mathf.Abs(this.transform.localPosition.x - correctForm.transform.localPosition.x) <= 0.5f &&
-                Mathf.Abs(this.transform.localPosition.y - correctForm.transform.localPosition.y) <= 0.5f)
+        if (Mathf.Abs(this.transform.localPosition.x - correctForm.transform.localPosition.x) <= errorMarginDrop &&
+                Mathf.Abs(this.transform.localPosition.y - correctForm.transform.localPosition.y) <= errorMarginDrop)
         {
             this.transform.position = new Vector3(correctForm.transform.position.x, correctForm.transform.position.y, correctForm.transform.position.z);
+            this.transform.rotation = correctForm.transform.rotation;
+
             finish = true;
         }
         else
         {
             this.transform.localPosition = new Vector3(resetPostition.x, resetPostition.y, resetPostition.z);
+            this.transform.rotation = resetRotation;
         }
     }
 }
