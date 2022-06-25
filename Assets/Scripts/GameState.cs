@@ -11,7 +11,27 @@ public class GameState : MonoBehaviour
         public int ST = 0;
         public int S = 0;
         public int P = 0;
+
+        public void incr(GramType gramType)
+        {
+            FindObjectOfType<UIManager>().setIncrFlash(gramType);
+            switch (gramType)
+            {
+                case GameState.GramType.LT:
+                    LT += 1; break;
+                case GameState.GramType.MT:
+                    MT += 1; break;
+                case GameState.GramType.ST:
+                    ST += 1; break;
+                case GameState.GramType.P:
+                    P += 1; break;
+                case GameState.GramType.S:
+                    S += 1; break;
+            }
+        }
     }
+
+    public enum GramType { LT, MT, ST, S, P}
 
 
     public GameObject beaver;

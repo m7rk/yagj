@@ -6,6 +6,8 @@ public class Pickupable : MonoBehaviour
 {
     private const float ROT_SPEED = 90f;
 
+    public GameState gs;
+    public GameState.GramType gt;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,5 +18,12 @@ public class Pickupable : MonoBehaviour
     void Update()
     {
         this.transform.eulerAngles = new Vector3(this.transform.eulerAngles.x, this.transform.eulerAngles.y + (90f * Time.deltaTime), this.transform.eulerAngles.z);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Destroy(this.gameObject);
+        gs.p1.incr(gt);
+
     }
 }
