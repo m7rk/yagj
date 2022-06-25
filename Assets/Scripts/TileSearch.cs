@@ -1,6 +1,19 @@
 using System.Collections.Generic;
 
 namespace TileSearch{
+
+
+  /*
+    Usage:
+      public static int[] findTile(startx, int starty, T type, T[,] map);
+      -- searches for the nearest tile of type "type" given a map starting from (startx, starty);
+      -- returns a pair of numbers corresponding to the x and y position of that tile.
+      
+      Example usage:
+      int[,] test_terrain = new int[,] { { 0, 0, 0, 0, 0 }, { 0, 0, 1, 0, 1}, { 0, 0, 0, 0, 0 }, {0, 0, 0, 0, 0}, {0, 0, 0, 1, 5}};
+      int[] nearest = TileSearcher<int>.findTile(0,0,5,test_terrain);
+
+  */
   class TileSearcher<T>{
 
       //searches for the closest "type" tile starting from position (startx, starty), using BFS
