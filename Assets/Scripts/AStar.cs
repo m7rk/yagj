@@ -27,14 +27,6 @@ namespace AStarFunctions
       public int x;
       public int y;
       public Pair(int a, int b) { x = a; y = b; }
-      public void printPair()
-      {
-        Console.Write("(");
-        Console.Write(x);
-        Console.Write(",");
-        Console.Write(y);
-        Console.Write(")");
-      }
 
       public override bool Equals(object obj)
       {
@@ -75,15 +67,6 @@ namespace AStarFunctions
         return -1;
       }
 
-      public void printQueue()
-      {
-        for (int i = 0; i < list.Count; i++)
-        {
-          list[i].printPair();
-          Console.Write(Pathcost[list[i]] + list[i].distance(Target));
-        }
-        Console.WriteLine();
-      }
       public PriorityQueue(ref Dictionary<Pair, int> pathcost, Pair target)
       {
         Pathcost = pathcost;
@@ -189,7 +172,6 @@ namespace AStarFunctions
       public bool empty() { return queue.empty(); }
       public Pair pop() { return queue.pop(); }
 
-      public void printQueue() { queue.printQueue(); }
     }
 
 
