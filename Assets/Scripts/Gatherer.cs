@@ -6,12 +6,21 @@ public class Gatherer : MonoBehaviour
 {
     GameState gs;
 
+    public float PLAYER_PUSH_FORCE = 0.5f;
+    public float WATER_PUSH_FORCE = 0.9f;
+
+    public Vector3 last;
+
+
     // ask gamestate where nearest resource is.
     public void Update()
     {
         foreach (Transform child in transform)
         {
-            child.GetComponent<SpriteRenderer>().color = Color.blue;
+            if (child.GetComponent<SpriteRenderer>())
+            {
+                child.GetComponent<SpriteRenderer>().color = Color.blue;
+            }
 
             foreach (Transform child2 in child)
             {
@@ -26,6 +35,16 @@ public class Gatherer : MonoBehaviour
 
     public void OnTriggerStay2D(Collider2D other)
     {
-        transform.position -= (other.transform.position - this.transform.position).normalized * Time.deltaTime;
+        if (other.tag == "Player")
+        {
+            last = this.transform.position;
+            transform.position -= (other.transform.position - this.transform.position).normalized * Time.deltaTime * PLAYER_PUSH_FORCE;
+        }
+
+        if (other.tag == "Water")
+        {
+            transform.position = last;
+        }
+
     }
 }

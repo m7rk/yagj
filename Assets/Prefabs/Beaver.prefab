@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4273571395313106585}
   - component: {fileID: 3841510672026269924}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: earC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,8 @@ GameObject:
   - component: {fileID: 3206213593263515839}
   - component: {fileID: 3206213593263515838}
   - component: {fileID: 3206213593263515833}
-  m_Layer: 0
+  - component: {fileID: 8614336596638123899}
+  m_Layer: 17
   m_Name: Beaver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,6 +171,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43e46241973652469ed11f2df9e5363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &8614336596638123899
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3206213593263515808}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &3206213593563651229
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3206213593563651228}
   - component: {fileID: 3206213593563651231}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: s
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3206213593696309553}
   - component: {fileID: 3206213593696309552}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: st
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -351,7 +373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3624109651901858315}
   - component: {fileID: 1248951454818155132}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +457,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1021311426647208245}
   - component: {fileID: 1235068877392375125}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: snootC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
