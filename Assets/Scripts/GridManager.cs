@@ -9,7 +9,10 @@ public class GridManager : MonoBehaviour
     public Tilemap terrCollide;
 
     public TileBase water;
-    public TileBase grass;
+    public List<TileBase> grass;
+    public List<TileBase> decors;
+
+    public List<Tilemap> terrDecor;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,11 +33,28 @@ public class GridManager : MonoBehaviour
             {
                 if(vals[x,y] > 0)
                 {
-                    terrWalkable.SetTile(new Vector3Int(x, y, 0), grass);
+                    terrWalkable.SetTile(new Vector3Int(x, y, 0), grass[((x*947)+(y*953)) % grass.Count]);
                 }
                 else
                 {
                     terrCollide.SetTile(new Vector3Int(x, y, 0), water);
+
+                    // add terrains as we need to 
+                    int i = 0;
+                    for (int dx = -1; dx != 2; dx++)
+                    {
+                        for (int dy = -1; dy != 2; dy++)
+                        {
+                            var not_oob = x + dx > 0 && y + dy > 0 && x + dx < vals.GetLength(0) && y + dy < vals.GetLength(1);
+
+                            if (not_oob && (dx != 0 || dy != 0) && vals[x + dx, y + dy] == 1)
+                            {
+                                terrDecor[i].SetTile(new Vector3Int(x, y, 0),decors[i]);
+                            }
+                            if((dx != 0 || dy != 0))
+                                i++;
+                        }
+                    }
                 }
             }
         }
