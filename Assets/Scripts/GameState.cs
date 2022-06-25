@@ -40,26 +40,49 @@ public class GameState : MonoBehaviour
 
 
     public GridManager gm;
+    public TreeManager tm;
     public GameObject NPCParent;
 
     public GramCollection p1 = new GramCollection();
     public GramCollection p2 = new GramCollection();
 
+    
     // Start is called before the first frame update
     void Start()
     {
         // Eventually we want to fetch this from a c# class
         // for now..
-        var world = new bool[50, 15];
-        for(var x = 0; x != world.GetLength(0); ++x)
+        var seed = Random.Range(0f, 100f);
+        var world = new int[100, 50];
+        for (var x = 0; x != world.GetLength(0); ++x)
         {
             for (var y = 0; y != world.GetLength(1); ++y)
             {
-                world[x, y] = ((Mathf.PerlinNoise(x/10f, y/10f) - (Mathf.Abs(y-7)/8f)) > 0.1);
+                var basePerlin = Mathf.Max(0.1f,Mathf.PerlinNoise((seed+x) / 5f, (seed+y) / 5f));
+                var yFalloff = Mathf.Abs(y - (world.GetLength(1) / 2)) / (0.5*(float)world.GetLength(1));
+                var xFalloff = Mathf.Abs(x - (world.GetLength(0) / 2)) / (0.5*(float)world.GetLength(0));
+                world[x, y] = (basePerlin + -xFalloff + -yFalloff) > 0 ? 1 : 0;
+                if (world[x, y] == 1)
+                {
+                    if ((x + (5*y)) % 9 == 0)
+                    {
+                        world[x, y] = 2;
+                    }
+                }
             }
         }
 
         gm.Create(world);
+        for (var x = 0; x != world.GetLength(0); ++x)
+        {
+            for (var y = 0; y != world.GetLength(1); ++y)
+            {
+                if (world[x, y] == 2)
+                {
+                    tm.plantTree(x, y);
+                }
+            }
+        }
     }
 
     // Update is called once per frame
@@ -69,7 +92,7 @@ public class GameState : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            Debug.Log(tilemapPos);
+            
         }
     }
 

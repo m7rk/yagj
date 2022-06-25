@@ -22,13 +22,13 @@ public class GridManager : MonoBehaviour
         
     }
 
-    public void Create(bool[,] vals)
+    public void Create(int[,] vals)
     {
         for (int x = 0; x < vals.GetLength(0); x++)
         {
             for (int y = 0; y < vals.GetLength(1); y++)
             {
-                if(vals[x,y])
+                if(vals[x,y] > 0)
                 {
                     terrWalkable.SetTile(new Vector3Int(x, y, 0), grass);
                 }
