@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject book;
     // Start is called before the first frame update
+    public GameObject puzzleMgame;
 
     public AudioClip bookOpen;
     public AudioClip bookClose;
@@ -61,11 +62,13 @@ public class UIManager : MonoBehaviour
     {
         book.SetActive(true);
         GetComponent<AudioSource>().PlayOneShot(bookOpen);
+        puzzleMgame.SetActive(true);
     }
 
     public void closeBook()
     {
         book.SetActive(false);
         GetComponent<AudioSource>().PlayOneShot(bookClose);
+        puzzleMgame.SetActive(false);
     }
 }
