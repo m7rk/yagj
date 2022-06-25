@@ -64,15 +64,15 @@ namespace AStarFunctions
     {
       Dictionary<Pair, int> Pathcost;
       Pair Target;
-      List<Pair> list;
+      public List<Pair> list;
 
       public int Compare(Pair p1, Pair p2)
       {
         double heuristic_1 = Pathcost[p1] + p1.distance(Target);
         double heuristic_2 = Pathcost[p2] + p2.distance(Target); ;
         if (heuristic_1 == heuristic_2) return 0;
-        if (heuristic_1 < heuristic_2) return 1;
-        return -1;
+        if (heuristic_1 < heuristic_2) return -1;
+        return 1;
       }
 
       public void printQueue()
@@ -93,17 +93,17 @@ namespace AStarFunctions
 
       public void siftUp(int i)
       {
-        int smallest = i;
+        int larger= i;
         int n = list.Count;
 
-        if ((i / 2 >= 0) && (Compare(list[i / 2], list[smallest]) <= 0)) { smallest = i / 2; }
+        if ((i/2 >= 0) && (Compare(list[i/2], list[i]) >= 0)) { larger = i/2; }
 
-        if (smallest != i)
+        if (larger != i)
         {
-          Pair temp = list[smallest];
-          list[smallest] = list[i];
+          Pair temp = list[larger];
+          list[larger] = list[i];
           list[i] = temp;
-          siftUp(smallest);
+          siftUp(larger);
         }
       }
 
@@ -112,8 +112,8 @@ namespace AStarFunctions
         int smallest = i;
         int n = list.Count;
 
-        if ((2 * i < n) && (Compare(list[2 * i], list[smallest]) <= 0)) { smallest = 2 * i; }
-        if ((2 * i + 1 < n) && (Compare(list[2 * i + 1], list[smallest]) <= 0)) { smallest = 2 * i + 1; }
+        if ((2 * i + 1 < n) && (Compare(list[2 * i + 1], list[smallest]) < 0)) { smallest = 2 * i + 1; }
+        if ((2 * i + 2 < n) && (Compare(list[2 * i + 2], list[smallest]) < 0)) { smallest = 2 * i + 2; }
 
         if (smallest != i)
         {
@@ -132,6 +132,9 @@ namespace AStarFunctions
           list.Add(p1);
           siftUp(list.Count - 1);
         }
+        else {
+          siftUp(list.IndexOf(p1));
+        }
       }
 
       //Returns true if queue is empty
@@ -142,8 +145,9 @@ namespace AStarFunctions
       {
         Pair item = list[0];
         list[0] = list[list.Count - 1];
-        siftDown(0);
         list.RemoveAt(list.Count - 1);
+        siftDown(0);
+        
         return item;
       }
     }
@@ -236,10 +240,10 @@ namespace AStarFunctions
       while (!queue.empty())
       {
         //queue.printQueue();
-       
+
         Pair node = queue.pop();
-       
-        Console.WriteLine();
+        //node.printPair();
+        
         //If  target  is  reached  then  backtrach  and  return  the  path  from  source  to  target
         if (node.Equals(target))
         {
