@@ -4,3 +4,4 @@ To make the drag and drop works, you need some step first:
 	Then on Additional Settings, change the Sorting Layer to ShapeBlack.
 -Drag into the scene the same object chosen before, but put it inside NormalShapes, change the Sorting Layer to Shape, then add a Box Collider 2D Component.
 	At last add the Move System script, then on the Correct Form field, drop the corresponding black shape.
+-Shapes must have they respectively tags to make the collisions work

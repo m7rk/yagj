@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class MoveSystem : MonoBehaviour
 {
-    public GameObject correctForm;
+
+    // the corrisponding black tangrams
+    private GameObject correctForm;
+
     private bool moving;
     private bool finish;
+    private bool isMatching;
 
     private float startPosX;
     private float startPosY;
@@ -17,12 +21,13 @@ public class MoveSystem : MonoBehaviour
     CompletePuzzle completePuzzle;
 
     [SerializeField]
-    private float errorMarginDrop = 0.5f;
+    private float errorMarginDrop = 0.1f;
 
     void Start()
     {
         resetPostition = this.transform.localPosition;
         completePuzzle = GameObject.FindGameObjectWithTag("PointsHandler").GetComponent<CompletePuzzle>();
+        isMatching = false;
     }
 
     void Update()
@@ -76,25 +81,37 @@ public class MoveSystem : MonoBehaviour
     {
         moving = false;
 
-        // if the shape moves near a radius of the correct form, snap it,
-        // else reset the position
-
-        if (Mathf.Abs(this.transform.localPosition.x - correctForm.transform.localPosition.x) <= errorMarginDrop &&
-                Mathf.Abs(this.transform.localPosition.y - correctForm.transform.localPosition.y) <= errorMarginDrop)
+        if (isMatching)
         {
-            this.transform.position = new Vector3(correctForm.transform.position.x, correctForm.transform.position.y, correctForm.transform.position.z);
-            this.transform.rotation = correctForm.transform.rotation;
 
-            completePuzzle.AddPoints();
+            // if the shape moves near a radius of the correct form, snap it,
+            // else reset the position
+            if (Mathf.Abs(this.transform.localPosition.x - correctForm.transform.localPosition.x) <= errorMarginDrop &&
+                        Mathf.Abs(this.transform.localPosition.y - correctForm.transform.localPosition.y) <= errorMarginDrop)
+            {
+                this.transform.position = new Vector3(correctForm.transform.position.x, correctForm.transform.position.y, correctForm.transform.position.z);
+                this.transform.rotation = correctForm.transform.rotation;
 
-            //completePuzzle.AddPoints();
+                completePuzzle.AddPoints();
 
-            finish = true;
+                finish = true;
+            }
+            else
+            {
+                this.transform.localPosition = new Vector3(resetPostition.x, resetPostition.y, resetPostition.z);
+                this.transform.rotation = resetRotation;
+            }
         }
-        else
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (this.tag == other.gameObject.tag)
         {
-            this.transform.localPosition = new Vector3(resetPostition.x, resetPostition.y, resetPostition.z);
-            this.transform.rotation = resetRotation;
+            Debug.Log(this.tag + " " + other.tag);
+            isMatching = true;
+            correctForm = other.gameObject;
         }
     }
 }

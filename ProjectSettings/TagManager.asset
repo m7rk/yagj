@@ -6,6 +6,11 @@ TagManager:
   tags:
   - PointsHandler
   - Water
+  - p
+  - mt
+  - lt
+  - s
+  - st
   layers:
   - Default
   - TransparentFX
