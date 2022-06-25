@@ -14,7 +14,8 @@ public class GameState : MonoBehaviour
     }
 
 
-    GameObject beaver;
+    public GameObject beaver;
+    public GameObject player;
     GameObject golem;
 
 
@@ -56,7 +57,7 @@ public class GameState : MonoBehaviour
     {
         var v = Instantiate(beaver);
         v.transform.SetParent(NPCParent.transform);
-        v.transform.position = this.transform.position;
+        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
     }
 
     public void spawnGolem()
