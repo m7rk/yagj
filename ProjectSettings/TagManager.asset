@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - PointsHandler
+  - Water
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcessing
   - Water
   - UI
   - 
@@ -22,9 +23,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Player
+  - Gatherer
+  - Pickupable
   - 
   - 
   - 
