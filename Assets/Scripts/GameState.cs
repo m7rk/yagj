@@ -50,15 +50,13 @@ public class GameState : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Eventually we want to fetch this from a c# class
-        // for now..
         var seed = Random.Range(0f, 100f);
-        var world = new int[100, 50];
+        var world = new int[200, 150];
         for (var x = 0; x != world.GetLength(0); ++x)
         {
             for (var y = 0; y != world.GetLength(1); ++y)
             {
-                var basePerlin = Mathf.Max(0.1f,Mathf.PerlinNoise((seed+x) / 5f, (seed+y) / 5f));
+                var basePerlin = Mathf.Max(0.2f,Mathf.PerlinNoise((seed+x) / 5f, (seed+y) / 5f));
                 var yFalloff = Mathf.Abs(y - (world.GetLength(1) / 2)) / (0.5*(float)world.GetLength(1));
                 var xFalloff = Mathf.Abs(x - (world.GetLength(0) / 2)) / (0.5*(float)world.GetLength(0));
                 world[x, y] = (basePerlin + -xFalloff + -yFalloff) > 0 ? 1 : 0;
