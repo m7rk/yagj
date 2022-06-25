@@ -50,11 +50,11 @@ namespace AStarFunctions
 
       public int Abs(int x) { return (x >= 0) ? x : -x; }
 
-      public int distance(Pair p)
+      public double distance(Pair p)
       {
         //Distance is a function of the two points and the terrain 
         //Manhattan  distance,  but  can  be  changed  to  Euclidean  distance  if  leads  to  better  performance
-        return Abs(this.x - p.x) + Abs(this.y - p.y);
+        return Math.Abs(this.x-p.x) + Math.Abs(this.y-p.y);
       }
 
     }
@@ -68,8 +68,8 @@ namespace AStarFunctions
 
       public int Compare(Pair p1, Pair p2)
       {
-        int heuristic_1 = Pathcost[p1] + p1.distance(Target);
-        int heuristic_2 = Pathcost[p2] + p1.distance(Target); ;
+        double heuristic_1 = Pathcost[p1] + p1.distance(Target);
+        double heuristic_2 = Pathcost[p2] + p2.distance(Target); ;
         if (heuristic_1 == heuristic_2) return 0;
         if (heuristic_1 < heuristic_2) return 1;
         return -1;
@@ -236,8 +236,10 @@ namespace AStarFunctions
       while (!queue.empty())
       {
         //queue.printQueue();
+       
         Pair node = queue.pop();
-
+       
+        Console.WriteLine();
         //If  target  is  reached  then  backtrach  and  return  the  path  from  source  to  target
         if (node.Equals(target))
         {
