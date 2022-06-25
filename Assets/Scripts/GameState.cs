@@ -125,7 +125,7 @@ public class GameState : MonoBehaviour
         {
             for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
             {
-                terrainAdapter[x, y] = naturalWorldState[x, y] == TerrainType.GRASS ? 1 : 1000;
+                terrainAdapter[x, y] = naturalWorldState[x, y] == TerrainType.GRASS ? 1 : -1;
             }
         }
         return terrainAdapter;
@@ -136,8 +136,7 @@ public class GameState : MonoBehaviour
         // construction
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            
+            Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));       
         }
     }
 

@@ -175,8 +175,8 @@ namespace AStarFunctions
         if ((x < Map_width) && (x >= 0) && (y >= 0) && (y < Map_height))
         {
           Pair p = new Pair(x, y);
-          int v = Pathcost[prev] + terrain[y, x];
-          if ((terrain[y,x] >= 0) && (!Pathcost.ContainsKey(p) || v < Pathcost[p]))
+          int v = Pathcost[prev] + terrain[x, y];
+          if ((terrain[x,y] >= 0) && (!Pathcost.ContainsKey(p) || v < Pathcost[p]))
           {
             Pathcost[p] = v;
             Backtrack[p] = prev;

@@ -31,6 +31,8 @@ public class Gatherer : MonoBehaviour
                 }
             }
         }
+
+
     }
 
     // ask gamestate where nearest resource is.
@@ -69,10 +71,12 @@ public class Gatherer : MonoBehaviour
         {
             var to_tile = TileSearch.TileSearcher<GameState.TerrainType>.findTile(start_x, start_y, GameState.TerrainType.TREES, GameState.naturalWorldState);
 
-            var path = astar.pathTo(start_x, start_y, to_tile[0], to_tile[1], GameState.getTerrainAdapter());
+            var ta = GameState.getTerrainAdapter();
+            ta[to_tile[0],to_tile[1]] = 1;
+            var path = astar.pathTo(start_x, start_y, to_tile[0], to_tile[1], ta);
 
-            // later -> go to middle of square.
-            this.transform.position += (new Vector3(path[1][0] - start_x, path[1][1] - start_y).normalized * Time.deltaTime);
+
+            this.transform.position += new Vector3(0.3f + (path[1][0] * 0.6f) - this.transform.position.x, (0.3f + (path[1][1] * 0.6f) - this.transform.position.y),0).normalized * Time.deltaTime;
         }
 
     }
