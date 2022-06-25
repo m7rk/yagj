@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
         
     }
 
-    public void Create(int[,] vals)
+    public void Create(GameState.TerrainType[,] vals)
     {
         for (int x = 0; x < vals.GetLength(0); x++)
         {
@@ -47,7 +47,7 @@ public class GridManager : MonoBehaviour
                         {
                             var not_oob = x + dx > 0 && y + dy > 0 && x + dx < vals.GetLength(0) && y + dy < vals.GetLength(1);
 
-                            if (not_oob && (dx != 0 || dy != 0) && vals[x + dx, y + dy] == 1)
+                            if (not_oob && (dx != 0 || dy != 0) && vals[x + dx, y + dy] != GameState.TerrainType.WATER)
                             {
                                 terrDecor[i].SetTile(new Vector3Int(x, y, 0),decors[i]);
                             }

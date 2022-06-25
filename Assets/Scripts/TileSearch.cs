@@ -30,7 +30,7 @@ namespace TileSearch{
               int[] node = queue.Dequeue();
               int x = node[0];
               int y = node[1]; 
-              if (map[y,x].Equals(type)){return node;}
+              if (map[x,y].Equals(type)){return node;}
              
               int[] left = new int[] {x-1, y};
               if (x-1 >= 0 && !visited.Contains(left)){

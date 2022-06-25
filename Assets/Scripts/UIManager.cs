@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     public void setIncrFlash(GameState.GramType gramType)
@@ -48,7 +48,13 @@ public class UIManager : MonoBehaviour
         STTEXT.text = "" + gs.p1.ST;
         STEXT.text = "" + gs.p1.S;
         PTEXT.text = "" + gs.p1.P;
+
         STTEXT.color = Color.Lerp(STTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
+        MTTEXT.color = Color.Lerp(MTTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
+        LTTEXT.color = Color.Lerp(LTTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
+
+        STEXT.color = Color.Lerp(STEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
+        PTEXT.color = Color.Lerp(PTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
     }
 
     public void openBook()

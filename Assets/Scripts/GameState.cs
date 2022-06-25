@@ -31,58 +31,105 @@ public class GameState : MonoBehaviour
         }
     }
 
-    public enum GramType { LT, MT, ST, S, P}
+    public enum GramType { LT, MT, ST, S, P }
+    public enum TerrainType { WATER, GRASS, ROCKS, TREES }
 
-
-    public GameObject beaver;
+    // reference to player
     public GameObject player;
-    GameObject golem;
+
+    public GameObject pickupParent;
+
+    // instantiateables
+    public GameObject beaver;
+    public GameObject golem;
+
+    public GameObject pkLT;
+    public GameObject pkMT;
+    public GameObject pkST;
+    public GameObject pkS;
+    public GameObject pkP;
 
 
-    public GridManager gm;
-    public TreeManager tm;
+    // this is the rocks, water, trees, grass.
+    public static TerrainType[,] naturalWorldState;
+
+    // etc
+    public static GridManager gm;
+    public static HarvestableManager hm;
+
     public GameObject NPCParent;
 
     public GramCollection p1 = new GramCollection();
     public GramCollection p2 = new GramCollection();
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        gm = FindObjectOfType<GridManager>();
+        hm = FindObjectOfType<HarvestableManager>();
         var seed = Random.Range(0f, 100f);
-        var world = new int[200, 150];
-        for (var x = 0; x != world.GetLength(0); ++x)
+        naturalWorldState = new TerrainType[200, 150];
+
+        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != world.GetLength(1); ++y)
+            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
             {
-                var basePerlin = Mathf.Max(0.2f,Mathf.PerlinNoise((seed+x) / 5f, (seed+y) / 5f));
-                var yFalloff = Mathf.Abs(y - (world.GetLength(1) / 2)) / (0.5*(float)world.GetLength(1));
-                var xFalloff = Mathf.Abs(x - (world.GetLength(0) / 2)) / (0.5*(float)world.GetLength(0));
-                world[x, y] = (basePerlin + -xFalloff + -yFalloff) > 0 ? 1 : 0;
-                if (world[x, y] == 1)
+                var basePerlin = Mathf.Max(0.2f, Mathf.PerlinNoise((seed + x) / 5f, (seed + y) / 5f));
+                var yFalloff = Mathf.Abs(y - (naturalWorldState.GetLength(1) / 2)) / (0.5 * (float)naturalWorldState.GetLength(1));
+                var xFalloff = Mathf.Abs(x - (naturalWorldState.GetLength(0) / 2)) / (0.5 * (float)naturalWorldState.GetLength(0));
+                bool land = (basePerlin + -xFalloff + -yFalloff) > 0;
+
+                if (land)
                 {
-                    if ((x + (5*y)) % 9 == 0)
+                    naturalWorldState[x, y] = TerrainType.GRASS;
+
+                    if ((x + (5 * y)) % 9 == 0)
                     {
-                        world[x, y] = 2;
+                        naturalWorldState[x, y] = TerrainType.TREES;
                     }
+                    if ((x + (5 * y)) % 15 == 0)
+                    {
+                        naturalWorldState[x, y] = TerrainType.ROCKS;
+                    }
+                } else
+                {
+
+                    naturalWorldState[x, y] = TerrainType.WATER;
                 }
             }
         }
 
-        gm.Create(world);
-        for (var x = 0; x != world.GetLength(0); ++x)
+        gm.Create(naturalWorldState);
+        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != world.GetLength(1); ++y)
+            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
             {
-                if (world[x, y] == 2)
+                if (naturalWorldState[x, y] == TerrainType.TREES)
                 {
-                    tm.plantTree(x, y);
+                    hm.plantTree(x, y);
+                }
+                if (naturalWorldState[x, y] == TerrainType.ROCKS)
+                {
+                    hm.plantRocks(x, y);
                 }
             }
         }
+
     }
 
+    static public int[,] getTerrainAdapter()
+    {
+        var terrainAdapter = new int[200, 150];
+        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        {
+            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            {
+                terrainAdapter[x, y] = naturalWorldState[x, y] == TerrainType.GRASS ? 1 : 1000;
+            }
+        }
+        return terrainAdapter;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -106,5 +153,28 @@ public class GameState : MonoBehaviour
         var v = Instantiate(golem);
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = this.transform.position;
+    }
+
+    public void addPickupable(string gm, Vector2 pos)
+    {
+        GameObject go = null;
+        switch(gm)
+        {
+            case "lt":
+                go = pkLT; break;
+            case "mt":
+                go = pkMT; break;
+            case "st":
+                go = pkST; break;
+            case "s":
+                go = pkS; break;
+            case "p":
+                go = pkP; break;
+        }
+
+        var v = Instantiate(go);
+        v.GetComponent<Pickupable>().gs = this;
+        v.transform.SetParent(pickupParent.transform);
+        v.transform.localPosition = new Vector3(pos.x, pos.y, 0);
     }
 }
