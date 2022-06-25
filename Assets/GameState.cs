@@ -14,7 +14,12 @@ public class GameState : MonoBehaviour
     }
 
 
+    GameObject beaver;
+    GameObject golem;
+
+
     public GridManager gm;
+    public GameObject NPCParent;
 
     public GramCollection p1 = new GramCollection();
     public GramCollection p2 = new GramCollection();
@@ -45,5 +50,19 @@ public class GameState : MonoBehaviour
             Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             Debug.Log(tilemapPos);
         }
+    }
+
+    public void spawnBeaver()
+    {
+        var v = Instantiate(beaver);
+        v.transform.SetParent(NPCParent.transform);
+        v.transform.position = this.transform.position;
+    }
+
+    public void spawnGolem()
+    {
+        var v = Instantiate(golem);
+        v.transform.SetParent(NPCParent.transform);
+        v.transform.position = this.transform.position;
     }
 }

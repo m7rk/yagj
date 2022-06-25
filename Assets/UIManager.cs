@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    GameState gs;
-    TMPro.TextMeshPro collected;
+    public GameState gs;
+    public TMPro.TMP_Text collected;
 
     public GameObject book;
     // Start is called before the first frame update
