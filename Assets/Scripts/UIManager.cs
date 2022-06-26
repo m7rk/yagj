@@ -44,7 +44,14 @@ public class UIManager : MonoBehaviour
 
     private GameObject loadedRecipe;
 
+    private int recIdxLoaded = 0;
+
     public readonly float COLOR_TRANS_TIME = 2f;
+
+    public TMPro.TMP_Text NAME;
+    public TMPro.TMP_Text DESC;
+
+    public Button buildBtn;
 
     void Start()
     {
@@ -54,6 +61,7 @@ public class UIManager : MonoBehaviour
         scol = STIM.color;
         pcol = PTIM.color;
         loadRecipe(0);
+        buildBtn.gameObject.SetActive(false);
     }
 
     private int completionSteps = 0;
@@ -79,6 +87,38 @@ public class UIManager : MonoBehaviour
     public void stepCompleted()
     {
         completionSteps++;
+        if(completionSteps == loadedRecipe.transform.childCount)
+        {
+            buildBtn.gameObject.SetActive(true);
+            loadDesc(recIdxLoaded);
+        }
+    }
+
+    public void loadDesc(int idx)
+    {
+       switch(idx)
+        {
+            case 0:
+                NAME.text = "BEAVER";
+                DESC.text = "CUTS DOWN TREES.\nADORABLY.";
+                return;
+            case 1:
+                NAME.text = "GOLEM";
+                DESC.text = "MINES ROCKS.\n.";
+                return;
+            case 2:
+                NAME.text = "CATERPILLAR";
+                DESC.text = "COLLECTS ITEMS FOR YOU.\nREQUIRES A \'SHED\'";
+                return;
+            case 3:
+                NAME.text = "SHED";
+                DESC.text = "CATERPILLARS DROP OFF\nITEMS HERE.";
+                return;
+            case 4:
+                NAME.text = "TURRET";
+                DESC.text = "SCARES OFF\nINTRUDERS.";
+                return;
+        }
     }
 
     void Update()
@@ -106,8 +146,6 @@ public class UIManager : MonoBehaviour
         LTTEXT.color = Color.Lerp(LTTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
         STEXT.color = Color.Lerp(STEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
         PTEXT.color = Color.Lerp(PTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
-
-
     }
 
     public void openBook()
@@ -125,8 +163,21 @@ public class UIManager : MonoBehaviour
     public void loadRecipe(System.Int32 rec)
     {
         Destroy(loadedRecipe);
+        recIdxLoaded = rec;
         loadedRecipe = Instantiate(recipies[rec]);
         loadedRecipe.transform.SetParent(recipeParent.transform);
         loadedRecipe.transform.localPosition = Vector3.zero;
+        completionSteps = 0;
+        buildBtn.gameObject.SetActive(false);
+    }
+
+    public void onBuild()
+    {
+        closeBook();
+        switch(recIdxLoaded)
+        {
+            case 0: gs.spawnBeaver(); return;
+            case 1: gs.spawnGolem(); return;
+        }
     }
 }
