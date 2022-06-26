@@ -59,6 +59,7 @@ public class GameState : MonoBehaviour
     public static HarvestableManager hm;
 
     public GameObject NPCParent;
+    public GameObject BuildingParent;
 
     public GramCollection p1 = new GramCollection();
     public GramCollection p2 = new GramCollection();
@@ -143,15 +144,7 @@ public class GameState : MonoBehaviour
         }
         return terrainAdapter;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        // construction
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3Int tilemapPos = gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));       
-        }
-    }
+
 
     public void spawnBeaver()
     {
