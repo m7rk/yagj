@@ -54,7 +54,9 @@ public class Gatherer : MonoBehaviour
             {
                 GameState.hm.cutDown(start_x, start_y);
             }
+
             animTimeout -= Time.deltaTime;
+
             return;
         } 
         //Print2DArray(GameState.terrainAdapter);
