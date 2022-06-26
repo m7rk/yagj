@@ -46,10 +46,7 @@ public class PlaceablePiece : MonoBehaviour
         // correct shape
         if (matchedShape != null && matchedShape.tag == this.tag)
         {
-
             var rot = Mathf.Abs(Quaternion.Angle(matchedShape.GetComponent<RectTransform>().rotation, GetComponent<RectTransform>().rotation));
-
-            Debug.Log(rot);
 
             // correct position
             bool rotGood = Mathf.Abs(rot) < 1f;
@@ -73,6 +70,7 @@ public class PlaceablePiece : MonoBehaviour
             {
                 this.GetComponent<RectTransform>().position = matchedShape.GetComponent<RectTransform>().position;
                 this.GetComponent<RectTransform>().rotation = matchedShape.GetComponent<RectTransform>().rotation;
+                matchedShape.tag = "COMPLETE";
                 finish = true;
                 return true;
             }

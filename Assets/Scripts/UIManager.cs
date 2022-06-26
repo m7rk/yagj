@@ -162,6 +162,11 @@ public class UIManager : MonoBehaviour
 
     public void loadRecipe(System.Int32 rec)
     {
+        foreach(var v in FindObjectsOfType<MinigamePieceSpawner>())
+        {
+            v.refund();
+        }
+
         Destroy(loadedRecipe);
         recIdxLoaded = rec;
         loadedRecipe = Instantiate(recipies[rec]);
@@ -171,8 +176,18 @@ public class UIManager : MonoBehaviour
         buildBtn.gameObject.SetActive(false);
     }
 
+    private void constFinished()
+    {
+        foreach (var v in FindObjectsOfType<MinigamePieceSpawner>())
+        {
+            v.accept();
+        }
+        loadRecipe(recIdxLoaded);
+    }
+
     public void onBuild()
     {
+        constFinished();
         closeBook();
         switch(recIdxLoaded)
         {

@@ -6,11 +6,11 @@ public class GameState : MonoBehaviour
 {
     public class GramCollection
     {
-        public int LT = 0;
-        public int MT = 0;
-        public int ST = 0;
-        public int S = 0;
-        public int P = 0;
+        public int LT = 5;
+        public int MT = 5;
+        public int ST = 5;
+        public int S = 5;
+        public int P = 5;
 
         public void incr(GramType gramType)
         {
