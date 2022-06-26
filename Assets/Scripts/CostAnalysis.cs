@@ -27,10 +27,12 @@ namespace CostAnalysis
 
     AI currently implemented:)
 
-    1) List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    1) List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
+       List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
        - Returns a build order which builds the most expensive item first. 
 
-    2)  List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates)
+    2)  List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
+        List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
        - Returns a build order which builds the most lacking item first. 
 
        
@@ -114,7 +116,7 @@ namespace CostAnalysis
 
     //Builds the most expensive item if possible. 
     //Ideally would result in the behaviour where it would create as many resource gathering builds at the beginning before building as many turrets.
-    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
     {
       /*
         Parameters:
@@ -148,14 +150,19 @@ namespace CostAnalysis
         }
         index--;
         //This is here to prevent infinite loops
-        if (output.Count >= 8){break;}
+        if (output.Count >= limit){break;}
       }
 
       return output;
     }
 
+    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    {
+        return Ordering_ExpensiveGreedy( havePieces, haveBuilds,  rates, 5);
+    }
+
     //Produces an ordering which favours the item built the least, if possible. The cost is used as a tie breaker. 
-    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, double[] rates)
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, double[] rates, int limit)
     {
       /*
         Parameters:
@@ -195,10 +202,15 @@ namespace CostAnalysis
             output.Add(item);
           }
 
-          if (output.Count >= 8){break;}
+          if (output.Count >= limit){break;}
       }
     
       return output;
+    }
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates)
+    {
+        return Ordering_MostNeeded( havePieces, haveBuilds,  rates, 5);
+
     }
   }
 }
