@@ -60,7 +60,7 @@ public class Gatherer : MonoBehaviour
             return;
         } 
         //Print2DArray(GameState.terrainAdapter);
-        var astar = new AStarFunctions.AStar();
+        // var astar = new AStarFunctions.AStar();
 
 
         // grid size is 0.6u

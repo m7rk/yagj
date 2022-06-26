@@ -115,6 +115,10 @@ public class UIManager : MonoBehaviour
                 DESC.text = "CATERPILLARS DROP OFF\nITEMS HERE.";
                 return;
             case 4:
+                NAME.text = "PGRM FACTORY";
+                DESC.text = "CREATES PARALLELOGRAMS\nINTERMITTENTLY.";
+                return;
+            case 6:
                 NAME.text = "TURRET";
                 DESC.text = "SCARES OFF\nINTRUDERS.";
                 return;
@@ -199,6 +203,10 @@ public class UIManager : MonoBehaviour
         {
             case 0: gs.spawnBeaver(); return;
             case 1: gs.spawnGolem(); return;
+            case 2: gs.spawnCaterpillar(); return;
+            case 3: gs.spawnShed(); return;
+            case 4: gs.spawnPFactory(); return;
+            case 6: gs.spawnTurret(); return;
         }
     }
 }

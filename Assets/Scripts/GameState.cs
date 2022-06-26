@@ -76,7 +76,9 @@ public class GameState : MonoBehaviour
     // instantiateables
     public GameObject beaver;
     public GameObject golem;
+    public GameObject caterpillar;
     public GameObject turret;
+    public GameObject shed;
 
     public GameObject pkLT;
     public GameObject pkMT;
@@ -194,10 +196,28 @@ public class GameState : MonoBehaviour
         v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
     }
 
+    public void spawnCaterpillar()
+    {
+        var v = Instantiate(golem);
+        v.transform.SetParent(NPCParent.transform);
+        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
+    }
+
     public void spawnTurret()
     {
-        FindObjectOfType<PlayerController>().createConstPrefab(turret);
+        player.GetComponent<PlayerController>().createConstPrefab(turret);
     }
+
+    public void spawnShed()
+    {
+        player.GetComponent<PlayerController>().createConstPrefab(shed);
+    }
+
+    public void spawnPFactory()
+    {
+        player.GetComponent<PlayerController>().createConstPrefab(shed);
+    }
+
 
     public void addPickupable(string gm, Vector2 pos)
     {
