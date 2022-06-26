@@ -11,6 +11,7 @@ TagManager:
   - lt
   - s
   - st
+  - Gatherer
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - Player
   - Gatherer
   - Pickupable
-  - 
+  - GathererHelper
   - 
   - 
   - 

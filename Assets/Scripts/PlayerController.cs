@@ -10,6 +10,19 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    GameObject constructionPrefab = null;
+
+
+    public void createConstPrefab(GameObject b)
+    {
+        Instantiate(b);
+        b.transform.SetParent(null);
+        foreach(Transform child in b.transform)
+        {
+            child.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -38,6 +51,12 @@ public class PlayerController : MonoBehaviour
         }
 
         GetComponent<Animator>().SetBool("Walking",walk);
+
+        if(constructionPrefab != null)
+        {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            constructionPrefab.transform.position = worldPosition;
+        }
 
     }
 }

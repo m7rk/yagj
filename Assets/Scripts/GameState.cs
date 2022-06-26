@@ -42,6 +42,7 @@ public class GameState : MonoBehaviour
     // instantiateables
     public GameObject beaver;
     public GameObject golem;
+    public GameObject turret;
 
     public GameObject pkLT;
     public GameObject pkMT;
@@ -125,7 +126,19 @@ public class GameState : MonoBehaviour
         {
             for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
             {
-                terrainAdapter[x, y] = naturalWorldState[x, y] == TerrainType.GRASS ? 1 : -1;
+                int val = 0;
+                switch (naturalWorldState[x, y])
+                {
+                    case TerrainType.GRASS:
+                        val = 0; break;
+                    case TerrainType.TREES:
+                        val = 1; break;
+                    case TerrainType.ROCKS:
+                        val = 2; break;
+                    case TerrainType.WATER:
+                        val = -1; break;
+                }
+                terrainAdapter[x, y] = val;
             }
         }
         return terrainAdapter;
@@ -151,7 +164,12 @@ public class GameState : MonoBehaviour
     {
         var v = Instantiate(golem);
         v.transform.SetParent(NPCParent.transform);
-        v.transform.position = this.transform.position;
+        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
+    }
+
+    public void spawnTurret()
+    {
+        FindObjectOfType<PlayerController>().createConstPrefab(turret);
     }
 
     public void addPickupable(string gm, Vector2 pos)
