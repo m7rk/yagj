@@ -77,8 +77,11 @@ public class GameState : MonoBehaviour
     public GameObject beaver;
     public GameObject golem;
     public GameObject caterpillar;
+
     public GameObject turret;
     public GameObject shed;
+    public GameObject pFactory;
+
 
     public GameObject pkLT;
     public GameObject pkMT;
@@ -92,7 +95,7 @@ public class GameState : MonoBehaviour
 
     // etc
     public static GridManager gm;
-    public static HarvestableManager hm;
+    public static StructureManager hm;
 
     public GameObject NPCParent;
     public GameObject BuildingParent;
@@ -105,10 +108,11 @@ public class GameState : MonoBehaviour
     void Start()
     {
         gm = FindObjectOfType<GridManager>();
-        hm = FindObjectOfType<HarvestableManager>();
+        hm = FindObjectOfType<StructureManager>();
         var seed = Random.Range(0f, 100f);
         naturalWorldState = new TerrainType[200, 150];
 
+        // first pass, generate the basic outline of the world.
         for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
         {
             for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
@@ -122,11 +126,15 @@ public class GameState : MonoBehaviour
                 {
                     naturalWorldState[x, y] = TerrainType.GRASS;
 
-                    if ((x + (5 * y)) % 9 == 0)
+                    // high freq noise for rocks, trees.
+                    var resPerlin = Mathf.PerlinNoise(((seed*2) + x) / 2f, ((seed*4) + y) / 2f);
+
+                    if (resPerlin < 0.2f)
                     {
                         naturalWorldState[x, y] = TerrainType.TREES;
                     }
-                    if ((x + (5 * y)) % 15 == 0)
+
+                    if (resPerlin > 0.8f)
                     {
                         naturalWorldState[x, y] = TerrainType.ROCKS;
                     }
@@ -138,7 +146,46 @@ public class GameState : MonoBehaviour
             }
         }
 
+        // secondly, we need to place the bases on opposide sides of map, so the player can choose. 
+        int[] first = null;
+        int[] second = null;
+        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        {
+            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            {
+                if(first == null && naturalWorldState[x,y] != TerrainType.WATER)
+                {
+                    // candidate
+                    if(naturalWorldState[x+1,y] != TerrainType.WATER && naturalWorldState[x+1,y+1] != TerrainType.WATER && naturalWorldState[x,y+1] == TerrainType.WATER)
+                    {
+                        first = new int[2] { x, y };
+                    }
+                }
+
+                if (naturalWorldState[x, y] != TerrainType.WATER)
+                {
+                    // candidate
+                    if (naturalWorldState[x + 1, y] != TerrainType.WATER && naturalWorldState[x + 1, y + 1] != TerrainType.WATER && naturalWorldState[x, y + 1] == TerrainType.WATER)
+                    {
+                        second = new int[2] { x, y };
+                    }
+                }
+            }
+        }
+
+        naturalWorldState[first[0],first[1]] = TerrainType.GRASS;
+        naturalWorldState[first[0]+1, first[1]] = TerrainType.GRASS;
+        naturalWorldState[first[0], first[1]+1] = TerrainType.GRASS;
+        naturalWorldState[first[0]+1, first[1]+1] = TerrainType.GRASS;
+
+        naturalWorldState[second[0], second[1]] = TerrainType.GRASS;
+        naturalWorldState[second[0] + 1, second[1]] = TerrainType.GRASS;
+        naturalWorldState[second[0], second[1] + 1] = TerrainType.GRASS;
+        naturalWorldState[second[0] + 1, second[1] + 1] = TerrainType.GRASS;
+
         gm.Create(naturalWorldState);
+
+        // there's space (for a base)
         for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
         {
             for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
@@ -154,6 +201,8 @@ public class GameState : MonoBehaviour
             }
         }
 
+        FindObjectOfType<StructureManager>().putBase(first[0], first[1], 'R');
+        FindObjectOfType<StructureManager>().putBase(second[0], second[1], 'B');
     }
 
     static public int[,] getTerrainAdapter()
@@ -198,7 +247,7 @@ public class GameState : MonoBehaviour
 
     public void spawnCaterpillar()
     {
-        var v = Instantiate(golem);
+        var v = Instantiate(caterpillar);
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
     }
@@ -215,7 +264,7 @@ public class GameState : MonoBehaviour
 
     public void spawnPFactory()
     {
-        player.GetComponent<PlayerController>().createConstPrefab(shed);
+        player.GetComponent<PlayerController>().createConstPrefab(pFactory);
     }
 
 

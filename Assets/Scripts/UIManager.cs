@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -52,6 +53,14 @@ public class UIManager : MonoBehaviour
     public TMPro.TMP_Text DESC;
 
     public Button buildBtn;
+
+    public GameObject rVic;
+
+    public GameObject bVic;
+
+    public float ggTimer = -1;
+
+
 
     void Start()
     {
@@ -133,6 +142,15 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if(ggTimer > 0)
+        {
+            ggTimer -= Time.deltaTime;
+            if(ggTimer <= 0)
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
+        }
+
         LTTEXT.text = "" + gs.p1.LT;
         MTTEXT.text = "" + gs.p1.MT;
         STTEXT.text = "" + gs.p1.ST;
@@ -208,5 +226,17 @@ public class UIManager : MonoBehaviour
             case 4: gs.spawnPFactory(); return;
             case 6: gs.spawnTurret(); return;
         }
+    }
+
+    public void redVictory()
+    {
+        rVic.SetActive(true);
+        ggTimer = 5;
+    }
+
+    public void blueVictory()
+    {
+        bVic.SetActive(true);
+        ggTimer = 5;
     }
 }

@@ -12,8 +12,9 @@ public class Gatherer : MonoBehaviour
 
     public float animTimeout = 0f;
     public Vector3 last;
+    public enum GTYPE { WOOD, MINE, RES }
 
-    public bool collectTrees;
+    public GTYPE collectType;
 
     public void Start()
     {
@@ -52,7 +53,15 @@ public class Gatherer : MonoBehaviour
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                GameState.hm.cutDown(start_x, start_y);
+                if (collectType == GTYPE.WOOD && GameState.hm.objAt(start_x, start_x) == "tree")
+                {
+                    GameState.hm.attack(start_x, start_y);
+                }
+
+                if (collectType == GTYPE.MINE && GameState.hm.objAt(start_x, start_x) == "rock")
+                {
+                    GameState.hm.attack(start_x, start_y);
+                }
             }
 
             animTimeout -= Time.deltaTime;
@@ -72,7 +81,7 @@ public class Gatherer : MonoBehaviour
         }
 
 
-        var tres = (collectTrees ? GameState.TerrainType.TREES : GameState.TerrainType.ROCKS);
+        var tres = (collectType == GTYPE.WOOD ? GameState.TerrainType.TREES : GameState.TerrainType.ROCKS);
 
         //this.transform.position += new Vector3(path[1][0] - path[0][0], path[1][1] - path[0][1]).normalized * Time.deltaTime;
 
@@ -93,7 +102,7 @@ public class Gatherer : MonoBehaviour
             */
 
             var ta = GameState.getTerrainAdapter();
-            var move = CrapBFS.find(start_x, start_y, (collectTrees ? 1 : 2), ta);
+            var move = CrapBFS.find(start_x, start_y, collectType == GTYPE.WOOD ? 1 : 2, ta);
 
             var posDelt = new Vector3(move.Item1,move.Item2,0).normalized;
             this.transform.position += posDelt * Time.deltaTime;

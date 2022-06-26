@@ -3492,7 +3492,7 @@ MonoBehaviour:
   golem: {fileID: 7968647779566896426, guid: 7651ef4d267a4c54cadb92566a5bc167, type: 3}
   caterpillar: {fileID: 0}
   turret: {fileID: 8012747192587238601, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-  shed: {fileID: 0}
+  shed: {fileID: 3013878198309621225, guid: 5b193cbe6dca03b42aeb140dd076d48f, type: 3}
   pkLT: {fileID: 6428055248681478639, guid: 19e53ec6ab52fb845b842286ba3a23af, type: 3}
   pkMT: {fileID: 3688065800539342669, guid: d0653a70de0a4654986a80684e52e6d5, type: 3}
   pkST: {fileID: 651143427552889464, guid: 734eb61dd51e43a479f69c7ab3eb3ffd, type: 3}
@@ -8766,63 +8766,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977267622}
   m_CullTransparentMesh: 1
---- !u!1001 &2038984361
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238598, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8012747192587238601, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
-      propertyPath: m_Name
-      value: Turret
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
 --- !u!1 &2039795539
 GameObject:
   m_ObjectHideFlags: 0

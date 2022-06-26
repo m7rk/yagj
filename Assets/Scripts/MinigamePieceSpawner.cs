@@ -14,7 +14,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
     public UIManager um;
     public GameState gs;
 
-    public void Start()
+    public void Awake()
     {
         currPiece = null;
         spawnedPieces = new List<GameObject>();

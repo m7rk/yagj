@@ -5,6 +5,10 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     public GameObject pivot;
+
+    public GameObject projectile;
+
+    public float coolDown = 0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,5 +19,11 @@ public class Turret : MonoBehaviour
     void Update()
     {
         pivot.transform.right = FindObjectOfType<PlayerController>().transform.position - pivot.transform.position;
+
+        coolDown -= Time.deltaTime;
+        if(coolDown < 0)
+        {
+
+        }
     }
 }

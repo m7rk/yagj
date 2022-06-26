@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+    private const float PLAYER_HARVEST_RANGE = 60f;
+
     public bool inMenu;
     // Start is called before the first frame update
     void Start()
@@ -13,8 +15,10 @@ public class PlayerController : MonoBehaviour
     }
 
     GameObject constructionPrefab = null;
+
     public float animTimeout = 0f;
 
+    private char teamName = 'R';
 
     public void createConstPrefab(GameObject b)
     {
@@ -39,7 +43,7 @@ public class PlayerController : MonoBehaviour
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                GameState.hm.cutDown(start_x, start_y);
+                GameState.hm.attack(start_x, start_y);
             }
 
             animTimeout -= Time.deltaTime;
@@ -78,31 +82,26 @@ public class PlayerController : MonoBehaviour
 
         GetComponent<Animator>().SetBool("Walking",walk);
 
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (constructionPrefab != null)
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var cell = GameState.gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
-            constructionPrefab.transform.position = new Vector3(cell.x * 0.6f, cell.y * 0.6f, -20);
-
             if (Input.GetMouseButtonDown(0))
             {
-                constructionPrefab.transform.SetParent(FindObjectOfType<GameState>().BuildingParent.transform);
-                foreach (Transform child in constructionPrefab.transform)
-                {
-                    child.GetComponent<SpriteRenderer>().color = Color.white;
-                }
+                // huh?
+                FindObjectOfType<StructureManager>().putTurret(cell.x, cell.y, teamName);
+                Destroy(constructionPrefab);
                 constructionPrefab = null;
-
             }
         }
         else
         {
-            if (Input.GetMouseButtonDown(0))
+            // only attack if within 50 px?
+            if (Input.GetMouseButtonDown(0) && (worldPosition - this.transform.position).magnitude < PLAYER_HARVEST_RANGE)
             {
                 GetComponent<Animator>().SetTrigger("Attack");
                 animTimeout = 2f;
-
+                // REALLY need a cut down button
             }
         }
 
