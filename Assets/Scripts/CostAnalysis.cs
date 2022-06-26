@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using Priority_Queue;
 
 namespace CostAnalysis
 {
@@ -17,7 +18,7 @@ namespace CostAnalysis
         - 8 = Turret 3
         - ...
         - n = Turret k
-      So a list of [1,1,5,0,2] means build in order: Beaver, Beaver, Shed, Nothing, Golems
+      So an output list of [1,1,5,0,2] means build in order: Beaver, Beaver, Shed, Nothing, Golems
 
     Example usage:
         TurrentCostAnalysis tca = new TurrentCostAnalysis();
@@ -36,6 +37,7 @@ namespace CostAnalysis
        - Returns a build order which builds the most lacking item first. 
 
        
+  */
 
   /*
   My assumptions and thinking:
@@ -43,6 +45,8 @@ namespace CostAnalysis
     - I can represent the number of pieces the AI has with a 5-element list L, where L[i] = number of pieces of type P_i
     - The cost of a Turret can be represented by a 5-element list as well. 
     - Can go for a greedy approach but there are more than one way to be greedy 
+   
+  */
 
 
   class TurrentCostAnalysis
@@ -126,7 +130,7 @@ namespace CostAnalysis
       - 5 = Shed
       - 6 = Turret 1
       - 7 = Turret 2 
-      - 8 = Turret 3
+      - 8 = Turret 3*/
       for (int item = 1; item < haveBuilds.GetLength(0); item++)
       {
         switch (item)
@@ -161,107 +165,114 @@ namespace CostAnalysis
     //Ideally would result in the behaviour where it would create as many resource gathering builds at the beginning before building as many turrets.
     public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds, int limit)
     {
-            /*
-              Parameters:
-                int[] havePieces 
-                    = the number of tangram pieces the AI currently has
-                int[] haveBuilds
-                    = the number of each item (E.g. beaver, golem, etc) that the AI has
-                List<int[]> turretCosts 
-                    = a list of costs to build each item. Assuming that the list is sorted from least powerful turret to most powerful. 
-                double[] rates 
-                    = the rate at which the AI is gathering resources per second. (Subject to change if second is )
+      /*
+        Parameters:
+          int[] havePieces 
+              = the number of tangram pieces the AI currently has
+          int[] haveBuilds
+              = the number of each item (E.g. beaver, golem, etc) that the AI has
+          List<int[]> turretCosts 
+              = a list of costs to build each item. Assuming that the list is sorted from least powerful turret to most powerful. 
+          double[] rates 
+              = the rate at which the AI is gathering resources per second. (Subject to change if second is )
 
-                Returns:
-                  List<int> output
-                     =  A list of indices of the items that the AI wants to build in the next k seconds. (where k is the length of the list)
-                        If no items can be built at the next second, then an empty list is returned
+          Returns:
+            List<int> output
+               =  A list of indices of the items that the AI wants to build in the next k seconds. (where k is the length of the list)
+                  If no items can be built at the next second, then an empty list is returned
+      */
 
-            List<int> output = new List<int>();
-            double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
+      List<int> output = new List<int>();
+      double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
 
-            int[] buildsMade = (int[]) haveBuilds.Clone();
+      int[] buildsMade = (int[]) haveBuilds.Clone();
 
-            int index = buildCosts.Count - 1;
+      int index = buildCosts.Count - 1;
 
-            while (index >= 0)
-            {
-              //If you can build the strongest turret at the next k second then build it.
-              if (vectorCompare(piecesLeft, buildCosts[index]))
-              {
-                piecesLeft = vectorSub(piecesLeft, index);
-                piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
-                buildsMade[index] += 1;
-                output.Add(index);
-                index = buildCosts.Count - 1;
-              }
-              index--;
-              //This is here to prevent infinite loops
-              if (output.Count >= limit) { break; }
-            }
-
-            return output;
-          }
-
-          public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds)
-          {
-            return Ordering_ExpensiveGreedy(havePieces, haveBuilds, 5);
-          }
-
-          //Produces an ordering which favours the item built the least, if possible. The cost is used as a tie breaker. 
-          public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, int limit)
-          {
-            /*
-              Parameters:
-                int[] havePieces 
-                    = the number of tangram pieces the AI currently has
-                int[] haveBuilds
-                    = the number of each item (E.g. beaver, golem, etc) that the AI has
-                List<int[]> turretCosts 
-                    = a list of costs to build each item. Assuming that the list is sorted from least powerful turret to most powerful. 
-                double[] rates 
-                    = the rate at which the AI is gathering resources per second. (Subject to change if second is )
-
-                Returns:
-                  List<int> output
-                     =  A list of indices of the turrent that the AI wants to build in the next second.
-                        If no turret can be built at the next second, then an empty list is returned
-
-
-            List<int> output = new List<int>();
-            double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
-
-            int index = buildCosts.Count - 1;
-
-            int[] buildsMade = new int[haveBuilds.Length];
-            PriorityQueue<int, int> queue = new PriorityQueue<int, int>();
-            for (int i = 0; i < haveBuilds.Length; i++)
-            {
-              buildsMade[i] = haveBuilds[i];
-              queue.Enqueue(i, haveBuilds[i]);
-            }
-
-            while (queue.Count > 0)
-            {
-              int item = queue.Dequeue();
-              if (vectorCompare(piecesLeft, buildCosts[item]))
-              {
-                piecesLeft = vectorSub(piecesLeft, item);
-                piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
-                buildsMade[item] += 1;
-                queue.Enqueue(item, buildsMade[item]);
-                output.Add(item);
-              }
-
-              if (output.Count >= limit) { break; }
-            }
-
-            return output;
-          }
-          public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds)
-          {
-            return Ordering_MostNeeded(havePieces, haveBuilds, 5);
-
-          }
-        }     */
+      while (index >= 0)
+      {
+        //If you can build the strongest turret at the next k second then build it.
+        if (vectorCompare(piecesLeft, buildCosts[index]))
+        {
+          piecesLeft = vectorSub(piecesLeft, index);
+          piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
+          buildsMade[index] += 1;
+          output.Add(index);
+          index = buildCosts.Count - 1;
         }
+        index--;
+        //This is here to prevent infinite loops
+        if (output.Count >= limit) { break; }
+      }
+
+      return output;
+    }
+
+    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds)
+    {
+      return Ordering_ExpensiveGreedy(havePieces, haveBuilds, 5);
+    }
+
+    public class Build : FastPriorityQueueNode{
+        public int x;
+        public Build(int i){x = i;}
+      }
+
+    //Produces an ordering which favours the item built the least, if possible. The cost is used as a tie breaker. 
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, int limit)
+    {
+      /*
+        Parameters:
+          int[] havePieces 
+              = the number of tangram pieces the AI currently has
+          int[] haveBuilds
+              = the number of each item (E.g. beaver, golem, etc) that the AI has
+          List<int[]> turretCosts 
+              = a list of costs to build each item. Assuming that the list is sorted from least powerful turret to most powerful. 
+          double[] rates 
+              = the rate at which the AI is gathering resources per second. (Subject to change if second is )
+
+          Returns:
+            List<int> output
+               =  A list of indices of the turrent that the AI wants to build in the next second.
+                  If no turret can be built at the next second, then an empty list is returned
+      */
+      
+
+      List<int> output = new List<int>();
+      double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
+
+      int index = buildCosts.Count - 1;
+
+      int[] buildsMade = new int[haveBuilds.GetLength(0)];
+      Priority_Queue.FastPriorityQueue<Build> queue = new Priority_Queue.FastPriorityQueue<Build>(10);
+      for (int i = 0; i < haveBuilds.GetLength(0); i++)
+      {
+        buildsMade[i] = haveBuilds[i];
+        queue.Enqueue(new Build(i), haveBuilds[i]);
+      }
+
+      while (queue.Count > 0)
+      {
+        int item = queue.Dequeue().x;
+        if (vectorCompare(piecesLeft, buildCosts[item]))
+        {
+          piecesLeft = vectorSub(piecesLeft, item);
+          piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
+          buildsMade[item] += 1;
+          queue.Enqueue(new Build(item), buildsMade[item]);
+          output.Add(item);
+        }
+
+        if (output.Count >= limit) { break; }
+      }
+
+      return output;
+    }
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds)
+    {
+      return Ordering_MostNeeded(havePieces, haveBuilds, 5);
+
+    }
+  }
+}
