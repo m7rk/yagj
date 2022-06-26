@@ -1,5 +1,7 @@
 using Priority_Queue;
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 /* Usage
   PathTo(startx, starty, endx, endy, terrain)
@@ -11,6 +13,7 @@ using Priority_Queue;
     AStar astar = new AStar();
     List<int[]> path; 
     path = astar.pathTo(0,0,1,2,test_terrain);
+*/
 
 
 namespace AStarFunctions
@@ -140,4 +143,3 @@ namespace AStarFunctions
     }
   }
 }
-*/
