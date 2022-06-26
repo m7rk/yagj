@@ -6,18 +6,52 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    public GameObject mainMenuPanel;
-    public GameObject missionSelectPanel;
+    [SerializeField]
+    private GameObject mainMenuPanel;
+    [SerializeField]
+    private GameObject missionSelectPanel;
+    [SerializeField]
+    private GameObject factionSelectPanel;
+
+    [SerializeField]
+    private bool isGGISelected;
+    [SerializeField]
+    private bool isBTangramSelected;
+
+    private int missionNumber;
+    private bool isPlayVsAI;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        isGGISelected = false;
+        isBTangramSelected = false;
+        isPlayVsAI = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isGGISelected || isBTangramSelected)
+        {
+            if(!isPlayVsAI)
+            {
+                try
+                {
+
+                    SceneManager.LoadScene("Mission" + missionNumber);
+                }
+                catch (Exception e)
+                {
+                    //condition if not loading map
+                }
+            }
+            else
+            {
+                SceneManager.LoadScene("Overworld");
+            }
+            
+        }
         
     }
 
@@ -31,7 +65,9 @@ public class MainMenuManager : MonoBehaviour
     {
         // code to load the player vs AI scene
         // SceneManager.LoadScene("nameScene");
-        SceneManager.LoadScene("Overworld");
+        isPlayVsAI = true;
+        factionSelectPanel.SetActive(true);
+
     }
 
     public void ReturnToMainMenu()
@@ -42,14 +78,19 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadSelectedMission(System.Int32 rec)
     {
-        try
-        {
-            SceneManager.LoadScene("Mission" + rec);
-        }
-        catch (Exception e)
-        {
-            //condition if not loading map
-        }
+        missionNumber = rec;
+        factionSelectPanel.SetActive(true);
+        missionSelectPanel.SetActive(false);
+    }
+
+    public void GGISleected()
+    {
+        isGGISelected = true;
+    }
+
+    public void BTangramSelected()
+    {
+        isBTangramSelected = true;
     }
 
 

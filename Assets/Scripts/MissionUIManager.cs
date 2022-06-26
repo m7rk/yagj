@@ -107,7 +107,7 @@ public class MissionUIManager : MonoBehaviour
         }
         else
         {
-            // condition if mission5 or player vs AI
+            SceneManager.LoadScene("MainMenu");
         }
     }
     public void MainMenu()
