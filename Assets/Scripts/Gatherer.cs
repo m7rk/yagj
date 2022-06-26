@@ -9,10 +9,9 @@ public class Gatherer : MonoBehaviour
     public float PLAYER_PUSH_FORCE = 0.5f;
     public float WATER_PUSH_FORCE = 0.9f;
 
+    public float animTimeout = 0f;
     public Vector3 last;
 
-
-    enum TT { E, C };
     public void Start()
     {
         foreach (Transform child in transform)
@@ -38,11 +37,28 @@ public class Gatherer : MonoBehaviour
     // ask gamestate where nearest resource is.
     public void Update()
     {
-        //Print2DArray(GameState.terrainAdapter);
-        var astar = new AStarFunctions.AStar();
- 
+
         // grid size is 0.6u
         var p = this.transform.localPosition;
+
+        int start_x = (int)(p.x / 0.6);
+        int start_y = (int)(p.y / 0.6);
+
+        if (animTimeout > 0)
+        {
+            // check for a good harvest.
+            if (animTimeout - Time.deltaTime <= 0)
+            {
+                GameState.hm.cutDown(start_x, start_y);
+            }
+
+            animTimeout -= Time.deltaTime;
+
+            return;
+        } 
+        //Print2DArray(GameState.terrainAdapter);
+        var astar = new AStarFunctions.AStar();
+
 
         // grid size is 0.6u
         var pl = FindObjectOfType<PlayerController>().transform.localPosition;
@@ -52,12 +68,6 @@ public class Gatherer : MonoBehaviour
             return;
         }
 
-        int start_x = (int)(p.x / 0.6);
-        int start_y = (int)(p.y / 0.6);
-
-        int end_x = (int)(pl.x / 0.6);
-        int end_y = (int)(pl.y / 0.6);
-
 
 
         //this.transform.position += new Vector3(path[1][0] - path[0][0], path[1][1] - path[0][1]).normalized * Time.deltaTime;
@@ -65,7 +75,8 @@ public class Gatherer : MonoBehaviour
         if (GameState.naturalWorldState[start_x,start_y] == GameState.TerrainType.TREES)
         {
             // tree cut down
-            GameState.hm.cutDown(start_x, start_y);
+            GetComponent<Animator>().SetTrigger("Gather");
+            animTimeout = 2.5f;
         }
         else
         {
@@ -76,7 +87,11 @@ public class Gatherer : MonoBehaviour
             var path = astar.pathTo(start_x, start_y, to_tile[0], to_tile[1], ta);
 
 
-            this.transform.position += new Vector3(0.3f + (path[1][0] * 0.6f) - this.transform.position.x, (0.3f + (path[1][1] * 0.6f) - this.transform.position.y),0).normalized * Time.deltaTime;
+            var posDelt = new Vector3(0.3f + (path[1][0] * 0.6f) - this.transform.position.x, (0.3f + (path[1][1] * 0.6f) - this.transform.position.y), 0).normalized;
+            this.transform.position += posDelt * Time.deltaTime;
+
+            this.transform.localScale = new Vector3(posDelt.x > 0 ? 0.2f : -0.2f,0.2f, 0.2f);
+            
         }
 
     }

@@ -40,10 +40,16 @@ public class HarvestableManager : MonoBehaviour
 
     public void cutDown(int x, int y)
     {
+        // someone else cut this already.
+        if(!res.ContainsKey(new Tuple<int, int>(x, y)))
+        {
+            return;
+        }
+
         var harvested = res[new Tuple<int, int>(x, y)].transform.GetChild(0);
 
         // fuck
-        FindObjectOfType<GameState>().addPickupable(harvested.name, new Vector2(x * 0.6f, y * 0.6f));
+        FindObjectOfType<GameState>().addPickupable(harvested.name, new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f,0.4f)));
    
         if(res[new Tuple<int, int>(x, y)].transform.childCount == 1)
         {
