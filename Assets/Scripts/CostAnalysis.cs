@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace CostAnalysis
 {
@@ -22,17 +23,16 @@ namespace CostAnalysis
         TurrentCostAnalysis tca = new TurrentCostAnalysis();
         int[] numberOfPieces = new int[] {1,1,1,1,1};
         int[] numberOfBuilds = new int[] {0,0,0,0,0,0,0,0};
-        double[] estRateOfGathering = new double[] {0,1,0,1,0};
-        List<int> osg = tca.Ordering_ExpensiveGreedy(numberOfPieces, numberOfBuilds, estRateOfGathering);
+        List<int> osg = tca.Ordering_ExpensiveGreedy(numberOfPieces, numberOfBuilds);
 
     AI currently implemented:)
 
-    1) List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
-       List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    1) List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  int limit)
+       List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds, )
        - Returns a build order which builds the most expensive item first. 
 
-    2)  List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
-        List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    2)  List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  int limit)
+        List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds)
        - Returns a build order which builds the most lacking item first. 
 
        
@@ -52,21 +52,22 @@ namespace CostAnalysis
   {
 
     //An array keeping track of the cost of building an item. Sorted by their "strength"
-    List<int[]> buildCosts; 
+    List<int[]> buildCosts;
 
-    public TurrentCostAnalysis(){
-        //Order of pieces: LT, MT, ST, S, P.
-        buildCosts = new List<int[]>();
-        buildCosts.Add(new int[] {0,0,0,0,0}); //None
-        buildCosts.Add(new int[] {0,0,1,1,0}); //Beaver
-        buildCosts.Add(new int[] {0,0,2,1,0}); //Golem
-        buildCosts.Add(new int[] {1,1,0,1,0}); //Pgram factory
-        buildCosts.Add(new int[] {0,0,2,2,0}); //Caterpillar
-        buildCosts.Add(new int[] {5,0,0,0,0}); //Shed
-        buildCosts.Add(new int[] {0,0,3,1,2}); //Turret 1
-        buildCosts.Add(new int[] {0,0,4,2,1}); //Turret 2
-        buildCosts.Add(new int[] {0,0,6,1,2}); //Turret 3
-    } 
+    public TurrentCostAnalysis()
+    {
+      //Order of pieces: LT, MT, ST, S, P.
+      buildCosts = new List<int[]>();
+      buildCosts.Add(new int[] { 0, 0, 0, 0, 0 }); //None
+      buildCosts.Add(new int[] { 0, 0, 1, 1, 0 }); //Beaver
+      buildCosts.Add(new int[] { 0, 0, 2, 1, 0 }); //Golem
+      buildCosts.Add(new int[] { 1, 1, 0, 1, 0 }); //Pgram factory
+      buildCosts.Add(new int[] { 0, 0, 2, 2, 0 }); //Caterpillar
+      buildCosts.Add(new int[] { 5, 0, 0, 0, 0 }); //Shed
+      buildCosts.Add(new int[] { 0, 0, 3, 1, 2 }); //Turret 1
+      buildCosts.Add(new int[] { 0, 0, 4, 2, 1 }); //Turret 2
+      buildCosts.Add(new int[] { 0, 0, 6, 1, 2 }); //Turret 3
+    }
 
     public bool vectorCompare(int[] list1, double[] list2)
     {
@@ -105,7 +106,8 @@ namespace CostAnalysis
     }
 
     //Updates the number of pieces that the AI has after purchasing an item
-    public double[] buyPieces(double[] havePieces, int item){
+    public double[] vectorSub(double[] havePieces, int item)
+    {
       double[] diff = new double[havePieces.GetLength(0)];
       for (int i = 0; i < havePieces.GetLength(0); i++)
       {
@@ -114,9 +116,53 @@ namespace CostAnalysis
       return diff;
     }
 
+    public double[] estimateRates(int[] haveBuilds)
+    {
+      double[] update = new double[5];
+      update[1] = 0.1;
+      //Order of pieces: LT, MT, ST, S, P.
+      /*- 0 = none
+      - 1 = Beavers
+      - 2 = Golems
+      - 3 = Pgram Factory
+      - 4 = Caterpillars
+      - 5 = Shed
+      - 6 = Turret 1
+      - 7 = Turret 2 
+      - 8 = Turret 3*/
+      for (int item = 1; item < haveBuilds.GetLength(0); item++)
+      {
+        switch (item)
+        {
+          //under the assumption that each resource gathering item produces 1/20 of resource.
+          //subject to change if a more sophisticated method invented
+          case 1: //Beaver 
+            update[0] += 0.05 * haveBuilds[1];
+            update[2] += 0.05 * haveBuilds[1];
+            break;
+          case 2: //Golems
+            update[3] += 0.05 * haveBuilds[2];
+            break;
+          case 3: //Pgram factory
+            update[4] += 0.05 * haveBuilds[3];
+            break;
+          case 4: //Caterpillar
+            update[0] += 0.05 * haveBuilds[1];
+            update[2] += 0.05 * haveBuilds[1];
+            update[3] += 0.05 * haveBuilds[2];
+            break;
+        }
+      }
+      return update;
+    }
+
+
+    //////////////////////////// BUILD STRATEGIES BELOW /////////////////////////////////////////////////////
+
+
     //Builds the most expensive item if possible. 
     //Ideally would result in the behaviour where it would create as many resource gathering builds at the beginning before building as many turrets.
-    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates, int limit)
+    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds, int limit)
     {
       /*
         Parameters:
@@ -137,32 +183,37 @@ namespace CostAnalysis
 
       List<int> output = new List<int>();
       double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
+
+      int[] buildsMade = (int[]) haveBuilds.Clone();
+
       int index = buildCosts.Count - 1;
+
       while (index >= 0)
       {
         //If you can build the strongest turret at the next k second then build it.
         if (vectorCompare(piecesLeft, buildCosts[index]))
         {
-          piecesLeft = buyPieces(piecesLeft, index);
-          piecesLeft = vectorAdd(piecesLeft, rates);
+          piecesLeft = vectorSub(piecesLeft, index);
+          piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
+          buildsMade[index] += 1;
           output.Add(index);
           index = buildCosts.Count - 1;
         }
         index--;
         //This is here to prevent infinite loops
-        if (output.Count >= limit){break;}
+        if (output.Count >= limit) { break; }
       }
 
       return output;
     }
 
-    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    public List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds)
     {
-        return Ordering_ExpensiveGreedy( havePieces, haveBuilds,  rates, 5);
+      return Ordering_ExpensiveGreedy(havePieces, haveBuilds, 5);
     }
 
     //Produces an ordering which favours the item built the least, if possible. The cost is used as a tie breaker. 
-    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, double[] rates, int limit)
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, int limit)
     {
       /*
         Parameters:
@@ -184,32 +235,36 @@ namespace CostAnalysis
       List<int> output = new List<int>();
       double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
 
+      int index = buildCosts.Count - 1;
+
       int[] buildsMade = new int[haveBuilds.Count()];
       PriorityQueue<int, int> queue = new PriorityQueue<int, int>();
-      for (int i = 0;  i < haveBuilds.Count(); i++){
+      for (int i = 0; i < haveBuilds.Count(); i++)
+      {
         buildsMade[i] = haveBuilds[i];
         queue.Enqueue(i, haveBuilds[i]);
       }
 
-      while(queue.Count > 0){
-          int item = queue.Dequeue();
-          if (vectorCompare(piecesLeft, buildCosts[item]))
-          {
-            piecesLeft = buyPieces(piecesLeft, item);
-            piecesLeft = vectorAdd(piecesLeft, rates);
-            buildsMade[item] += 1;
-            queue.Enqueue(item, buildsMade[item]);
-            output.Add(item);
-          }
+      while (queue.Count > 0)
+      {
+        int item = queue.Dequeue();
+        if (vectorCompare(piecesLeft, buildCosts[item]))
+        {
+          piecesLeft = vectorSub(piecesLeft, item);
+          piecesLeft = vectorAdd(piecesLeft, estimateRates(buildsMade));
+          buildsMade[item] += 1;
+          queue.Enqueue(item, buildsMade[item]);
+          output.Add(item);
+        }
 
-          if (output.Count >= limit){break;}
+        if (output.Count >= limit) { break; }
       }
-    
+
       return output;
     }
-    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates)
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds)
     {
-        return Ordering_MostNeeded( havePieces, haveBuilds,  rates, 5);
+      return Ordering_MostNeeded(havePieces, haveBuilds, 5);
 
     }
   }
