@@ -11,16 +11,23 @@ public class PlaceMinigameBase : MonoBehaviour, IPointerDownHandler
 
     private GameObject v;
     public UIManager um;
+    public GameState gs;
 
-    // SQUARE ROTATE BUG!!!
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        // this is fucking filthy
+        if(GetComponent<UnityEngine.UI.Image>().color == Color.white)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             v = Instantiate(spawnable);
             v.transform.SetParent(this.transform.parent);
             v.GetComponent<RectTransform>().transform.position = this.GetComponent<RectTransform>().transform.position;
+            gs.p1.decr(v.tag);
         }
     }
     // Update is called once per frame
@@ -32,6 +39,10 @@ public class PlaceMinigameBase : MonoBehaviour, IPointerDownHandler
             {
                 tag = "COMPLETE";
                 um.stepCompleted();
+            }
+            else
+            {
+                gs.p1.incr(v.tag);
             }
             v = null;
         }

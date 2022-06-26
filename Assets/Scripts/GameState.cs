@@ -29,6 +29,40 @@ public class GameState : MonoBehaviour
                     S += 1; break;
             }
         }
+
+        public void decr(string gramType)
+        {
+            switch (gramType)
+            {
+                case "lt":
+                    LT -= 1; break;
+                case "mt":
+                    MT -= 1; break;
+                case "st":
+                    ST -= 1; break;
+                case "p":
+                    P -= 1; break;
+                case "s":
+                    S -= 1; break;
+            }
+        }
+
+        public void incr(string gramType)
+        {
+            switch (gramType)
+            {
+                case "lt":
+                    incr(GramType.LT); break;
+                case "mt":
+                    incr(GramType.MT); break;
+                case "st":
+                    incr(GramType.ST); break;
+                case "p":
+                    incr(GramType.P); break;
+                case "s":
+                    incr(GramType.S); break;
+            }
+        }
     }
 
     public enum GramType { LT, MT, ST, S, P }

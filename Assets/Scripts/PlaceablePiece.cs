@@ -10,18 +10,10 @@ public class PlaceablePiece : MonoBehaviour
     private GameObject matchedShape;
 
     private bool finish;
-    private bool isMatching;
-
-    private Vector3 resetPostition;
-    private Quaternion resetRotation;
-
-    public UIManager um;
 
 
     void Start()
     {
-        resetPostition = this.transform.localPosition;
-        isMatching = false;
     }
 
     void Update()
@@ -54,10 +46,29 @@ public class PlaceablePiece : MonoBehaviour
         // correct shape
         if (matchedShape != null && matchedShape.tag == this.tag)
         {
-            // correct position
-            bool rotGood = Mathf.Abs(Quaternion.Angle(matchedShape.GetComponent<RectTransform>().rotation,GetComponent<RectTransform>().rotation)) < 1f;
 
-            Debug.Log(rotGood);
+            var rot = Mathf.Abs(Quaternion.Angle(matchedShape.GetComponent<RectTransform>().rotation, GetComponent<RectTransform>().rotation));
+
+            Debug.Log(rot);
+
+            // correct position
+            bool rotGood = Mathf.Abs(rot) < 1f;
+
+            // check for square symmetry
+            if(matchedShape.tag == "sq")
+            {
+                // diff of 90 okay!
+                rotGood = (rot < 1f) || (Mathf.Abs(rot - 90f) < 1f) || (Mathf.Abs(rot - 180f) < 1f);
+            }
+
+            // check for pgram symm.
+            if (matchedShape.tag == "p")
+            {
+                // diff of 180 okay!
+                rotGood = (rot < 1f) || (Mathf.Abs(rot - 180f) < 1f);
+            }
+
+
             if (rotGood)
             {
                 this.GetComponent<RectTransform>().position = matchedShape.GetComponent<RectTransform>().position;
@@ -79,7 +90,6 @@ public class PlaceablePiece : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("enter!!");
         matchedShape = other.gameObject;
     }
 
