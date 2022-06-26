@@ -13,7 +13,6 @@ public class CompletePuzzle : MonoBehaviour
     void Start()
     {
         pointsToWin = normalShapes.transform.childCount;
-        Debug.Log("Start");
         notCompleted.SetActive(true);
         completed.SetActive(false);
     }
