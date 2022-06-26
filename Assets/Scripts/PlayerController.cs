@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    public bool inMenu;
     // Start is called before the first frame update
     void Start()
     {
-        
+        inMenu = false;
     }
 
     GameObject constructionPrefab = null;
@@ -42,6 +44,11 @@ public class PlayerController : MonoBehaviour
 
             animTimeout -= Time.deltaTime;
 
+            return;
+        }
+
+        if(inMenu)
+        {
             return;
         }
 

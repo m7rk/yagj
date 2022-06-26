@@ -11,7 +11,6 @@ using Priority_Queue;
     AStar astar = new AStar();
     List<int[]> path; 
     path = astar.pathTo(0,0,1,2,test_terrain);
-*/
 
 
 namespace AStarFunctions
@@ -141,3 +140,4 @@ namespace AStarFunctions
     }
   }
 }
+*/
