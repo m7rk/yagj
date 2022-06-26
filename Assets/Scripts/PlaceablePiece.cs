@@ -15,13 +15,12 @@ public class PlaceablePiece : MonoBehaviour
     private Vector3 resetPostition;
     private Quaternion resetRotation;
 
-    CompletePuzzle completePuzzle;
+    public UIManager um;
 
 
     void Start()
     {
         resetPostition = this.transform.localPosition;
-        completePuzzle = GameObject.FindGameObjectWithTag("PointsHandler").GetComponent<CompletePuzzle>();
         isMatching = false;
     }
 
@@ -50,21 +49,21 @@ public class PlaceablePiece : MonoBehaviour
     }
 
 
-    public void check()
+    public bool check()
     {
         // correct shape
         if (matchedShape != null && matchedShape.tag == this.tag)
         {
             // correct position
-            bool posGood = (this.GetComponent<RectTransform>().position - matchedShape.GetComponent<RectTransform>().position).magnitude <= 10;
             bool rotGood = Mathf.Abs(Quaternion.Angle(matchedShape.GetComponent<RectTransform>().rotation,GetComponent<RectTransform>().rotation)) < 1f;
 
-            if (posGood && rotGood)
+            Debug.Log(rotGood);
+            if (rotGood)
             {
                 this.GetComponent<RectTransform>().position = matchedShape.GetComponent<RectTransform>().position;
                 this.GetComponent<RectTransform>().rotation = matchedShape.GetComponent<RectTransform>().rotation;
-                completePuzzle.AddPoints();
                 finish = true;
+                return true;
             }
             else
             {
@@ -73,12 +72,19 @@ public class PlaceablePiece : MonoBehaviour
         } else
         {
             Destroy(this.gameObject);
-        }    
+        }
+        return false;
 
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("enter!!");
         matchedShape = other.gameObject;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        matchedShape = null;
     }
 }

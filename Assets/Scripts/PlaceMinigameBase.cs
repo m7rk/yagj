@@ -10,6 +10,9 @@ public class PlaceMinigameBase : MonoBehaviour, IPointerDownHandler
     public GameObject spawnable;
 
     private GameObject v;
+    public UIManager um;
+
+    // SQUARE ROTATE BUG!!!
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -25,7 +28,11 @@ public class PlaceMinigameBase : MonoBehaviour, IPointerDownHandler
     {
         if(Input.GetMouseButtonUp(0) && v != null)
         {
-            v.GetComponent<PlaceablePiece>().check();
+            if(v.GetComponent<PlaceablePiece>().check())
+            {
+                tag = "COMPLETE";
+                um.stepCompleted();
+            }
             v = null;
         }
     }

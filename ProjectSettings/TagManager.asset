@@ -12,6 +12,7 @@ TagManager:
   - s
   - st
   - Gatherer
+  - COMPLETE
   layers:
   - Default
   - TransparentFX
