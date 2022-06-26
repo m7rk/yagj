@@ -4,6 +4,20 @@ namespace CostAnalysis
 {
 
   /*
+     Key of build items:
+        - 0 = none
+        - 1 = Beavers
+        - 2 = Golems
+        - 3 = Pgram Factory
+        - 4 = Caterpillars
+        - 5 = Shed
+        - 6 = Turret 1
+        - 7 = Turret 2 
+        - 8 = Turret 3
+        - ...
+        - n = Turret k
+      So a list of [1,1,5,0,2] means build in order: Beaver, Beaver, Shed, Nothing, Golems
+
     Example usage:
         TurrentCostAnalysis tca = new TurrentCostAnalysis();
         int[] numberOfPieces = new int[] {1,1,1,1,1};
@@ -13,8 +27,13 @@ namespace CostAnalysis
 
     AI currently implemented:)
 
-    1) Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
+    1) List<int> Ordering_ExpensiveGreedy(int[] havePieces, int[] haveBuilds,  double[] rates)
        - Returns a build order which builds the most expensive item first. 
+
+    2)  List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds,  double[] rates)
+       - Returns a build order which builds the most lacking item first. 
+
+       
   */
 
   /*
@@ -23,17 +42,7 @@ namespace CostAnalysis
     - I can represent the number of pieces the AI has with a 5-element list L, where L[i] = number of pieces of type P_i
     - The cost of a Turret can be represented by a 5-element list as well. 
     - Can go for a greedy approach but there are more than one way to be greedy 
-    - Also assuming that what can be built have an ordering of number of pieces needed
-        - 0 = Beavers
-        - 1 = Golems
-        - 2 = Pgram Factory
-        - 3 = Caterpillars
-        - 4 = Shed
-        - 5 = Turret 1
-        - 6 = Turret 2 
-        - 7 = Turret 3
-        - ...
-        - n = Turret k
+   
   */
 
 
@@ -46,6 +55,7 @@ namespace CostAnalysis
     public TurrentCostAnalysis(){
         //Order of pieces: LT, MT, ST, S, P.
         buildCosts = new List<int[]>();
+        buildCosts.Add(new int[] {0,0,0,0,0}); //None
         buildCosts.Add(new int[] {0,0,1,1,0}); //Beaver
         buildCosts.Add(new int[] {0,0,2,1,0}); //Golem
         buildCosts.Add(new int[] {1,1,0,1,0}); //Pgram factory
@@ -144,7 +154,8 @@ namespace CostAnalysis
       return output;
     }
 
-    public List<int> Ordering_LargestSmart(int[] havePieces, int[] haveBuilds, double[] rates)
+    //Produces an ordering which favours the item built the least, if possible. The cost is used as a tie breaker. 
+    public List<int> Ordering_MostNeeded(int[] havePieces, int[] haveBuilds, double[] rates)
     {
       /*
         Parameters:
@@ -164,7 +175,29 @@ namespace CostAnalysis
       */
 
       List<int> output = new List<int>();
+      double[] piecesLeft = Array.ConvertAll<int, double>(havePieces, x => (double)x);
 
+      int[] buildsMade = new int[haveBuilds.Count()];
+      PriorityQueue<int, int> queue = new PriorityQueue<int, int>();
+      for (int i = 0;  i < haveBuilds.Count(); i++){
+        buildsMade[i] = haveBuilds[i];
+        queue.Enqueue(i, haveBuilds[i]);
+      }
+
+      while(queue.Count > 0){
+          int item = queue.Dequeue();
+          if (vectorCompare(piecesLeft, buildCosts[item]))
+          {
+            piecesLeft = buyPieces(piecesLeft, item);
+            piecesLeft = vectorAdd(piecesLeft, rates);
+            buildsMade[item] += 1;
+            queue.Enqueue(item, buildsMade[item]);
+            output.Add(item);
+          }
+
+          if (output.Count >= 8){break;}
+      }
+    
       return output;
     }
   }
