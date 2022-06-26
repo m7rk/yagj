@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+
 /* Usage
   PathTo(startx, starty, endx, endy, terrain)
   - terrain is a int[,] 
@@ -20,248 +21,100 @@ namespace AStarFunctions
   public class AStar
   {
 
-    //Have a hashable and comparable Pair object to reduce clutter in the code. 
-    //This class is used to represent points
-    public class Pair
-    {
-      public int x;
-      public int y;
-      public Pair(int a, int b) { x = a; y = b; }
-      public void printPair()
-      {
-        Console.Write("(");
-        Console.Write(x);
-        Console.Write(",");
-        Console.Write(y);
-        Console.Write(")");
-      }
-
-      public override bool Equals(object obj)
-      {
-        if (obj is Pair)
-        {
-          Pair p = (Pair)obj;
-          return p.x == x && p.y == y;
-        }
-        return false;
-      }
-
-      public override int GetHashCode() { return (x.GetHashCode() + y.GetHashCode()).GetHashCode(); }
-
-      public int Abs(int x) { return (x >= 0) ? x : -x; }
-
-      public double distance(Pair p)
-      {
-        //Distance is a function of the two points and the terrain 
-        //Manhattan  distance,  but  can  be  changed  to  Euclidean  distance  if  leads  to  better  performance
-        return Math.Abs(this.x-p.x) + Math.Abs(this.y-p.y);
-      }
-
-    }
-
-    //My own impementation of PriorityQueue using a min heap.
-    public class PriorityQueue
-    {
-      Dictionary<Pair, int> Pathcost;
-      Pair Target;
-      public List<Pair> list;
-
-      public int Compare(Pair p1, Pair p2)
-      {
-        double heuristic_1 = Pathcost[p1] + p1.distance(Target);
-        double heuristic_2 = Pathcost[p2] + p2.distance(Target); ;
-        if (heuristic_1 == heuristic_2) return 0;
-        if (heuristic_1 < heuristic_2) return -1;
-        return 1;
-      }
-
-      public void printQueue()
-      {
-        for (int i = 0; i < list.Count; i++)
-        {
-          list[i].printPair();
-          Console.Write(Pathcost[list[i]] + list[i].distance(Target));
-        }
-        Console.WriteLine();
-      }
-      public PriorityQueue(ref Dictionary<Pair, int> pathcost, Pair target)
-      {
-        Pathcost = pathcost;
-        Target = target;
-        list = new List<Pair>();
-      }
-
-      public void siftUp(int i)
-      {
-        int larger= i;
-        int n = list.Count;
-
-        if ((i/2 >= 0) && (Compare(list[i/2], list[i]) >= 0)) { larger = i/2; }
-
-        if (larger != i)
-        {
-          Pair temp = list[larger];
-          list[larger] = list[i];
-          list[i] = temp;
-          siftUp(larger);
-        }
-      }
-
-      public void siftDown(int i)
-      {
-        int smallest = i;
-        int n = list.Count;
-
-        if ((2 * i + 1 < n) && (Compare(list[2 * i + 1], list[smallest]) < 0)) { smallest = 2 * i + 1; }
-        if ((2 * i + 2 < n) && (Compare(list[2 * i + 2], list[smallest]) < 0)) { smallest = 2 * i + 2; }
-
-        if (smallest != i)
-        {
-          Pair temp = list[smallest];
-          list[smallest] = list[i];
-          list[i] = temp;
-          siftDown(smallest);
-        }
-      }
-
-      //Insert and element to the queue
-      public void Add(Pair p1)
-      {
-        if (!list.Contains(p1))
-        {
-          list.Add(p1);
-          siftUp(list.Count - 1);
-        }
-        else {
-          siftUp(list.IndexOf(p1));
-        }
-      }
-
-      //Returns true if queue is empty
-      public bool empty() { return list.Count == 0; }
-
-      //Pops and returns the minimum element
-      public Pair pop()
-      {
-        Pair item = list[0];
-        list[0] = list[list.Count - 1];
-        list.RemoveAt(list.Count - 1);
-        siftDown(0);
-        
-        return item;
-      }
-    }
-
-    //A wrapper for the Proirity Queue so that it will work for a particular map
-    public class myPriorityQueue
-    {
-      PriorityQueue queue;
-      Dictionary<Pair, int> Pathcost;
-      int Map_width;
-      int Map_height;
-      Dictionary<Pair, Pair> Backtrack;
-
-      public myPriorityQueue(Pair source, Pair target, ref Dictionary<Pair, int> pathcost, int map_height, int map_width, ref Dictionary<Pair, Pair> backtrack)
-      {
-        queue = new PriorityQueue(ref pathcost, target);
-        Pathcost = pathcost;
-        Map_height = map_height;
-        Map_width = map_width;
-        Backtrack = backtrack;
-      }
-
-      public void enqueue(int x, int y, Pair prev, int[,] terrain)
-      {
-        if ((x < Map_width) && (x >= 0) && (y >= 0) && (y < Map_height))
-        {
-          Pair p = new Pair(x, y);
-          int v = Pathcost[prev] + terrain[x, y];
-          if ((terrain[x,y] >= 0) && (!Pathcost.ContainsKey(p) || v < Pathcost[p]))
-          {
-            Pathcost[p] = v;
-            Backtrack[p] = prev;
-            queue.Add(p);
-          }
-        }
-      }
-
-      public void Add(Pair item)
-      {
-        Pathcost[item] = 0;
-        queue.Add(item);
-      }
-      public bool empty() { return queue.empty(); }
-      public Pair pop() { return queue.pop(); }
-
-      public void printQueue() { queue.printQueue(); }
-    }
 
 
     /////////////// The actual A* search stuff /////////////////////
 
-    private List<int[]> build_path(Pair source, Pair target, Dictionary<Pair, Pair> backtrack)
+    private List<Tuple<int, int>> build_path(Tuple<int, int> source, Tuple<int, int> target, Dictionary<Tuple<int, int>, Tuple<int, int>> backtrack)
     {
       //Back  tracks  to  get  the  path  from  source  to  the  target
-      Pair curr = target;
-      List<int[]> arr = new List<int[]>();
-      int[] target_list = new int[] { target.x, target.y };
-      arr.Add(target_list);
+      Tuple<int, int> curr = target;
+      List<Tuple<int, int>> arr = new List<Tuple<int, int>>();
+      arr.Add(target);
 
       while (curr != source)
       {
         curr = backtrack[curr];
-        int[] curr_list = new int[] { curr.x, curr.y };
-        arr.Insert(0, curr_list);
+        arr.Insert(0, curr);
       }
       return arr;
     }
 
-    //Call this function to find a shortest path from the point (startx, starty) to (endx, endy) on terrain terrain
-    public List<int[]> pathTo(int startx, int starty, int endx, int endy, int[,] terrain)
+    public double distance(Tuple<int, int> p, Tuple<int, int> q)
     {
-
-      Pair source = new Pair(startx, starty);
-      Pair target = new Pair(endx, endy);
-
-      int map_width = terrain.GetLength(1);
-      int map_height = terrain.GetLength(0);
-
-      //Keep  track  of  which  nodes  seen  for  backtracking
-      Dictionary<Pair, Pair> backtrack = new Dictionary<Pair, Pair>();
-
-      //Keeps  track  of  the  pathcost  of  each  node
-      Dictionary<Pair, int> pathcost = new Dictionary<Pair, int>();
-
-      //A  queue  for  sorting  nodes  using  the  A*  cost
-      myPriorityQueue queue = new myPriorityQueue(source, target, ref pathcost, map_height, map_width, ref backtrack);
-      queue.Add(source);
-
-      //do  the  search
-      while (!queue.empty())
-      {
-        //queue.printQueue();
-
-        Pair node = queue.pop();
-        //node.printPair();
-        
-        //If  target  is  reached  then  backtrach  and  return  the  path  from  source  to  target
-        if (node.Equals(target))
-        {
-          return build_path(source, target, backtrack);
-        }
-
-        int x = node.x;
-        int y = node.y;
-        //Otherwise,  consider  the  next  step
-        queue.enqueue(x - 1, y, node, terrain);
-        queue.enqueue(x + 1, y, node, terrain);
-        queue.enqueue(x, y - 1, node, terrain);
-        queue.enqueue(x, y + 1, node, terrain);
-      }
-
-      //Return an empty list if no path is possible
-      return new List<int[]>();
+      return Math.Sqrt(Math.Pow(p.Item1 - q.Item1, 2) + Math.Pow(p.Item2 - q.Item2, 2));
     }
 
+
+    //Call this function to find a shortest path from the point (startx, starty) to (endx, endy) on terrain terrain
+    public List<Tuple<int, int>> pathTo(int startx, int starty, int endx, int endy, int[,] terrain)
+    {
+
+      Tuple<int, int> source = new Tuple<int, int>(startx, starty);
+      Tuple<int, int> target = new Tuple<int, int>(endx, endy);
+
+      int map_width = terrain.GetLength(0);
+      int map_height = terrain.GetLength(1);
+
+      //Keep  track  of  which  nodes  seen  for  backtracking
+      Dictionary<Tuple<int, int>, Tuple<int, int>> backtrack = new Dictionary<Tuple<int, int>, Tuple<int, int>>();
+
+      //Keeps  track  of  the  pathcost  of  each  node
+      Dictionary<Tuple<int, int>, int> pathcost = new Dictionary<Tuple<int, int>, int>();
+
+      //A  queue  for  sorting  nodes  using  the  A*  cost
+      PriorityQueue<Tuple<int, int>, double> queue = new PriorityQueue<Tuple<int, int>, double>();
+      pathcost[source] = 0;
+      queue.Enqueue(source, distance(source, target));
+
+
+      void Enqueue(int x, int y, Tuple<int, int> node)
+      {
+        if (x >= 0 && x < map_width && y >= 0 && y < map_height)
+        {
+          Tuple<int, int> p = new Tuple<int, int>(x, y);
+          
+          if (terrain[x,y] >= 0)
+          {
+            int pc =  pathcost[node] + terrain[x,y];
+            double cost = pc + distance(p, target); 
+            if (!pathcost.ContainsKey(p) || pc < pathcost[p])
+            {
+              pathcost[p] = pc;
+              backtrack[p] = node;
+              queue.Enqueue(p, cost);
+            }
+          }
+        }
+      }
+
+      //do  the  search
+      while (queue.Count > 0)
+      {
+        //queue.printQueue();
+        //Console.WriteLine(queue);
+        Tuple<int, int> node = queue.Dequeue();
+        //Console.WriteLine(node);
+
+        //If  target  is  reached  then  backtrack  and  return  the  path  from  source  to  target
+        if (node.Equals(target))
+        {
+          return build_path(source, node, backtrack);
+        }
+
+        int x = node.Item1;
+        int y = node.Item2;
+
+        //Otherwise,  consider  the  next  step
+        Enqueue(x + 1, y, node);
+        Enqueue(x - 1, y, node);
+        Enqueue(x, y - 1, node);
+        Enqueue(x, y + 1, node);
+
+
+      }
+        //Return an empty list if no path is possible
+        return new List<Tuple<int, int>>();
+    }
   }
 }
