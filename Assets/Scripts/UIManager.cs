@@ -121,6 +121,12 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void clearDesc()
+    {
+        NAME.text = "";
+        DESC.text = "";
+    }
+
     void Update()
     {
         LTTEXT.text = "" + gs.p1.LT;
@@ -162,11 +168,11 @@ public class UIManager : MonoBehaviour
 
     public void loadRecipe(System.Int32 rec)
     {
-        foreach(var v in FindObjectsOfType<MinigamePieceSpawner>())
+        clearDesc();
+        foreach (var v in FindObjectsOfType<MinigamePieceSpawner>())
         {
             v.refund();
         }
-
         Destroy(loadedRecipe);
         recIdxLoaded = rec;
         loadedRecipe = Instantiate(recipies[rec]);

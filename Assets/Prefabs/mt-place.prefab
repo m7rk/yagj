@@ -77,7 +77,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: -0.00000023841858, y: -0.00000011920929}
   serializedVersion: 2
-  m_Radius: 0.05
+  m_Radius: 0.1
 --- !u!222 &8137039712598412224
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -128,4 +128,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fa92471cd8d6549b71b6b6598a72de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  um: {fileID: 0}

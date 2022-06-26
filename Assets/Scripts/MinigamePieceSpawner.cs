@@ -51,7 +51,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
     {
         foreach (var v in spawnedPieces)
         {
-            gs.p1.incr(v.tag);
+            Destroy(v);
         }
         spawnedPieces = new List<GameObject>();
     }
