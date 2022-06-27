@@ -5,6 +5,8 @@ using UnityEngine;
 // this also sorts so kind of a misnomer.
 public class WobbleAndSort : MonoBehaviour
 {
+    public float offset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +16,7 @@ public class WobbleAndSort : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(offset + ",,");
 
         int i = 0;
         foreach (Transform child in transform)
@@ -22,7 +25,7 @@ public class WobbleAndSort : MonoBehaviour
             child.transform.position += (0.00003f * new Vector3(Mathf.Sin(i+Time.unscaledTime), Mathf.Cos(i+Time.unscaledTime),0));
             i++;
         }
-        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -1 + (this.transform.position.y * 0.001f));
+        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -1 + ((this.transform.position.y + offset) * 0.001f));
 
     }
 }

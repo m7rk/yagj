@@ -2771,9 +2771,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuPanel: {fileID: 1639402842}
   missionSelectPanel: {fileID: 212308600}
-  factionSelectPanel: {fileID: 0}
-  isGGISelected: 0
-  isBTangramSelected: 0
   fadeAnimator: {fileID: 1995789623}
   transitionTime: 2
 --- !u!114 &1905447194
@@ -3264,7 +3261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4915991023339185507, guid: d53d06f32b68fce47989a865dcb08db4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d53d06f32b68fce47989a865dcb08db4, type: 3}

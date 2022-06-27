@@ -82,6 +82,7 @@ public class StructureManager : MonoBehaviour
     public void putShed(int x, int y, char TID)
     {
         var t = Instantiate(shed);
+        // FUCK offset i forgout about
         put(t, x, y);
         paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "shed";
