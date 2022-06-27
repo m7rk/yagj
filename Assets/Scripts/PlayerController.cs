@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Sprite redAlt;
 
     private const float PLAYER_HARVEST_RANGE = 0.6f;
 
@@ -32,9 +33,23 @@ public class PlayerController : MonoBehaviour
         constructionPrefab.GetComponent<BoxCollider2D>().enabled = false;
     }
 
+    public void changeToRed()
+    {
+        transform.Find("starm").GetComponent<SpriteRenderer>().color = new Color(1f, 0.4f, 0f);
+        transform.Find("r").GetComponent<SpriteRenderer>().sprite = redAlt;
+    }
+
     // Update is called once per frame
     void Update()
     {
+
+        if(Input.GetKey(KeyCode.P))
+        {
+            Time.timeScale = 5f;
+        } else
+        {
+            Time.timeScale = 1f;
+        }
 
 
         if (animTimeout > 0)

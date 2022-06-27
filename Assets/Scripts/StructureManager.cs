@@ -8,6 +8,7 @@ public class StructureManager : MonoBehaviour
     public GameObject tree;
     public GameObject rocks;
 
+
     // map coord to actual GO (use name to keep track of what is.
     public Dictionary<Tuple<int, int>, GameObject> res = new Dictionary<Tuple<int, int>, GameObject>();
 
@@ -16,6 +17,8 @@ public class StructureManager : MonoBehaviour
     public GameObject shed;
     public GameObject pFactory;
     public GameObject rbase;
+
+    private bool gameEndFlag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -125,42 +128,82 @@ public class StructureManager : MonoBehaviour
 
     public void attack(int x, int y)
     {
+        if(gameEndFlag)
+        {
+            return;
+        }
+
         // someone else cut this already.
         if(!res.ContainsKey(new Tuple<int, int>(x, y)))
         {
             return;
         }
 
-        var harvested = res[new Tuple<int, int>(x, y)].transform.GetChild(0);
-
-        // fuck
-        FindObjectOfType<GameState>().addPickupable(harvested.name.Replace("C",""), new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f,0.4f)));
-   
-        if(res[new Tuple<int, int>(x, y)].transform.childCount == 1)
+        // for each child
+        for(int i = 0; i != res[new Tuple<int, int>(x, y)].transform.childCount; ++i)
         {
-            // res exhaused 
-            Destroy(res[new Tuple<int, int>(x, y)].gameObject);
+            var harvested = res[new Tuple<int, int>(x, y)].transform.GetChild(i);
+            var sname = harvested.GetComponent<SpriteRenderer>().sprite.name;
 
-
-            if(res[new Tuple<int, int>(x, y)].name == "Bbase")
+            // if it's at max damage.
+            if (sname.Contains("3"))
             {
-                // red victory
-                // end game in 10 s.
-                FindObjectOfType<UIManager>().redVictory();
-            }
-
-            if (res[new Tuple<int, int>(x, y)].name == "Rbase")
+                // harvest this! it is a tree!
+                if (res[new Tuple<int, int>(x, y)].name == "tree" || res[new Tuple<int, int>(x, y)].name == "rock")
+                {
+                    FindObjectOfType<GameState>().addPickupable(harvested.name.Replace("C", ""), new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f)));
+                    Destroy(harvested.gameObject);
+                    return;
+                } else
+                {
+                    // it's injured, just continue;
+                    continue;
+                }
+            } 
+            
+            else
             {
-                // red victory
-                // end game in 10 s.
-                FindObjectOfType<UIManager>().blueVictory();
+                // injure it.
+                if(sname.Contains("2"))
+                {
+                    harvested.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Broke/" + sname.Replace("2", "3"));
+                } else if (sname.Contains("1"))
+                {
+                    harvested.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Broke/" + sname.Replace("1", "2"));
+                } else
+                {
+                    harvested.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Broke/" + sname + "1");
+                }
+                return;
             }
-
-            res.Remove(new Tuple<int, int>(x, y));
-            GameState.worldState[x, y] = GameState.TerrainType.GRASS;
         }
+
+        // ledas mod, drop resources, no time for this now.
+
+        // item exhaused 
+        Destroy(res[new Tuple<int, int>(x, y)].gameObject);
+
+
+        if(res[new Tuple<int, int>(x, y)].name == "Bbase")
+        {
+            // red victory
+            // end game in 10 s.
+            gameEndFlag = true;
+            FindObjectOfType<UIManager>().redVictory();
+        }
+
+        if (res[new Tuple<int, int>(x, y)].name == "Rbase")
+        {
+            // red victory
+            // end game in 10 s.
+            FindObjectOfType<UIManager>().blueVictory();
+            gameEndFlag = true;
+        }
+
+        res.Remove(new Tuple<int, int>(x, y));
+        GameState.worldState[x, y] = GameState.TerrainType.GRASS;
+
         
 
-        Destroy(harvested.gameObject);
     }
 }

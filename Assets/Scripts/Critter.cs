@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Critter : MonoBehaviour
 {
-    GameState gs;
 
     public float GATHERER_PUSH_FORCE = 0.2f;
     public float PLAYER_PUSH_FORCE = 0.5f;
@@ -16,7 +15,10 @@ public class Critter : MonoBehaviour
     public GTYPE collectType;
 
 
+    private float CAT_SCALE = 0.4f;
+
     public GameObject collectedItem;
+    public GameState.GramType pickedUp;
 
     public void Start()
     {
@@ -38,17 +40,25 @@ public class Critter : MonoBehaviour
 
     public void tryCollect()
     {
+        GameObject best = null;
+        float bestdist = 1000000;
         foreach(var v in FindObjectsOfType<Pickupable>())
         {
-            if (Vector2.Distance(v.transform.position, this.transform.position) < 1f)
+            if (Vector2.Distance(v.transform.position, this.transform.position) < bestdist)
             {
-                collectedItem = v.gameObject;
-                collectedItem.transform.SetParent(this.transform);
-                collectedItem.transform.localPosition = Vector3.zero;
-                collectedItem.transform.localScale = Vector3.one;
-                Destroy(v.GetComponent<Pickupable>());
-                return;
+                best = v.gameObject;
+                bestdist = Vector2.Distance(v.transform.position, this.transform.position);
             }
+        }
+
+        if (best != null && bestdist < 1f)
+        {
+            pickedUp = best.GetComponent<Pickupable>().gt;
+            collectedItem = best.gameObject;
+            collectedItem.transform.SetParent(this.transform);
+            collectedItem.transform.localPosition = 2 * Vector3.up;
+            collectedItem.transform.eulerAngles = Vector3.zero;
+            Destroy(best.GetComponent<Pickupable>());
         }
     }
 
@@ -59,9 +69,11 @@ public class Critter : MonoBehaviour
         {
             if (Vector2.Distance(v.transform.position,this.transform.position) < 1f)
             {
+                // static gamestate..........
+                FindObjectOfType<GameState>().p1.incr(pickedUp);
                 Destroy(collectedItem);
                 collectedItem = null;
-                // need to get credit for pickup.
+                return;
             }
         }
     }
@@ -83,7 +95,7 @@ public class Critter : MonoBehaviour
             }
 
             var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
-            this.transform.position += posDelt * Time.deltaTime;
+            this.transform.position += posDelt * Time.deltaTime * CAT_SCALE;
             this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f, 1f, 1f);
         }
         else
@@ -95,7 +107,7 @@ public class Critter : MonoBehaviour
                 tryDeposit();
             }
             var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
-            this.transform.position += posDelt * Time.deltaTime;
+            this.transform.position += posDelt * Time.deltaTime * (CAT_SCALE * 0.7f);
             this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f, 1f, 1f);
         }
     }

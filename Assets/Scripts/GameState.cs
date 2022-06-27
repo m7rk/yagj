@@ -109,6 +109,8 @@ public class GameState : MonoBehaviour
     public GramCollection p1 = new GramCollection();
     public GramCollection p2 = new GramCollection();
 
+    private int[] redSpawn = null;
+    private int[] blueSpawn = null;
 
     // World Generation
     void Start()
@@ -203,18 +205,17 @@ public class GameState : MonoBehaviour
         }
 
         // Now place bases on the map.
-        int[] first = null;
-        int[] second = null;
+
         for (var x = 0; x != worldState.GetLength(0); ++x)
         {
             for (var y = 0; y != worldState.GetLength(1); ++y)
             {
-                if(first == null && worldState[x,y] != TerrainType.WATER)
+                if(redSpawn == null && worldState[x,y] != TerrainType.WATER)
                 {
                     // candidate
                     if(worldState[x+1,y] != TerrainType.WATER && worldState[x+1,y+1] != TerrainType.WATER && worldState[x,y+1] == TerrainType.WATER)
                     {
-                        first = new int[2] { x, y };
+                        redSpawn = new int[2] { x, y };
                     }
                 }
 
@@ -223,21 +224,21 @@ public class GameState : MonoBehaviour
                     // candidate
                     if (worldState[x + 1, y] != TerrainType.WATER && worldState[x + 1, y + 1] != TerrainType.WATER && worldState[x, y + 1] == TerrainType.WATER)
                     {
-                        second = new int[2] { x, y };
+                        blueSpawn = new int[2] { x, y };
                     }
                 }
             }
         }
 
-        worldState[first[0],first[1]] = TerrainType.GRASS;
-        worldState[first[0]+1, first[1]] = TerrainType.GRASS;
-        worldState[first[0], first[1]+1] = TerrainType.GRASS;
-        worldState[first[0]+1, first[1]+1] = TerrainType.GRASS;
+        worldState[redSpawn[0],redSpawn[1]] = TerrainType.GRASS;
+        worldState[redSpawn[0]+1, redSpawn[1]] = TerrainType.GRASS;
+        worldState[redSpawn[0], redSpawn[1]+1] = TerrainType.GRASS;
+        worldState[redSpawn[0]+1, redSpawn[1]+1] = TerrainType.GRASS;
 
-        worldState[second[0], second[1]] = TerrainType.GRASS;
-        worldState[second[0] + 1, second[1]] = TerrainType.GRASS;
-        worldState[second[0], second[1] + 1] = TerrainType.GRASS;
-        worldState[second[0] + 1, second[1] + 1] = TerrainType.GRASS;
+        worldState[blueSpawn[0], blueSpawn[1]] = TerrainType.GRASS;
+        worldState[blueSpawn[0] + 1, blueSpawn[1]] = TerrainType.GRASS;
+        worldState[blueSpawn[0], blueSpawn[1] + 1] = TerrainType.GRASS;
+        worldState[blueSpawn[0] + 1, blueSpawn[1] + 1] = TerrainType.GRASS;
 
         gm.Create(worldState);
 
@@ -257,12 +258,23 @@ public class GameState : MonoBehaviour
             }
         }
 
-        FindObjectOfType<StructureManager>().putBase(first[0], first[1], 'R');
-        FindObjectOfType<StructureManager>().putBase(second[0], second[1], 'B');
+        FindObjectOfType<StructureManager>().putBase(redSpawn[0], redSpawn[1], 'R');
+        FindObjectOfType<StructureManager>().putBase(blueSpawn[0], blueSpawn[1], 'B');
 
-        player.transform.localPosition = new Vector3(0.3f + first[0] * 0.6f, 0.3f + first[1] * 0.6f, this.transform.localPosition.z);
+        player.SetActive(false);
     }
 
+    public void putPlayerAtBase(bool red)
+    {
+        if (red)
+        {
+            player.transform.localPosition = new Vector3(0.3f + redSpawn[0] * 0.6f, 0.3f + redSpawn[1] * 0.6f, this.transform.localPosition.z);
+        } else
+        {
+            player.transform.localPosition = new Vector3(0.3f + blueSpawn[0] * 0.6f, 0.3f + blueSpawn[1] * 0.6f, this.transform.localPosition.z);
+
+        }
+    }
 
     static public int[,] getCatPickUpAdapter(char team)
     {
