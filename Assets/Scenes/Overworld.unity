@@ -4039,7 +4039,7 @@ MonoBehaviour:
   caterpillar: {fileID: 2946645314005896793, guid: 514658a7a56c00e4b910094f886db4f3, type: 3}
   turret: {fileID: 8012747192587238601, guid: c26a4a0db4914e6408ea6b4dd19a1e33, type: 3}
   shed: {fileID: 3013878198309621225, guid: 5b193cbe6dca03b42aeb140dd076d48f, type: 3}
-  pFactory: {fileID: 0}
+  pFactory: {fileID: 7257038635971982101, guid: 85932f37bf4cf7d48abe2a707914c647, type: 3}
   pkLT: {fileID: 6428055248681478639, guid: 19e53ec6ab52fb845b842286ba3a23af, type: 3}
   pkMT: {fileID: 3688065800539342669, guid: d0653a70de0a4654986a80684e52e6d5, type: 3}
   pkST: {fileID: 651143427552889464, guid: 734eb61dd51e43a479f69c7ab3eb3ffd, type: 3}

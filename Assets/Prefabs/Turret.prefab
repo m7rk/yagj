@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &851518115397708885
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6076958796096819370}
-  m_Layer: 0
-  m_Name: p
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6076958796096819370
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851518115397708885}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8012747192587238598}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8012747191413550494
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,7 +519,7 @@ GameObject:
   - component: {fileID: 7658603889151303118}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -573,7 +542,6 @@ Transform:
   - {fileID: 8012747191513535585}
   - {fileID: 8012747191413550495}
   - {fileID: 8012747191693061102}
-  - {fileID: 6076958796096819370}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -606,7 +574,7 @@ MonoBehaviour:
   projectileR: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
   projectileB: {fileID: 7220730281039596975, guid: 843dff0ab6a670b4487a34473d98f3a9, type: 3}
   coolDown: 0
-  turretRange: 10
+  turretRange: 6
 --- !u!61 &7658603889151303118
 BoxCollider2D:
   m_ObjectHideFlags: 0

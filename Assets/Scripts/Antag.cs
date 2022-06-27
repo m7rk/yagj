@@ -21,6 +21,34 @@ public class Antag : MonoBehaviour
         transform.Find("r").GetComponent<SpriteRenderer>().sprite = redAlt;
     }
 
+    private int[] findCoordNearby(int start_x, int start_y)
+    {
+        for (int dx = -4; dx != 5; dx++)
+        {
+            for (int dy = -4; dy != 5; dy++)
+            {
+                if(GameState.worldState[start_x+dx,start_y+dy] == GameState.TerrainType.GRASS)
+                {
+                    return new int[] { start_x + dx, start_y + dy };
+                }
+            }
+        }
+        return null;
+    }
+
+    private void OnEnable()
+    {
+        // cheat like a fuckin bastard
+        FindObjectOfType<GameState>().spawnBeaver(this.gameObject, team);
+        FindObjectOfType<GameState>().spawnCaterpillar(this.gameObject, team);
+        FindObjectOfType<GameState>().spawnGolem(this.gameObject, team);
+        var v = findCoordNearby((int)(this.transform.position.x / 0.6f), (int)(this.transform.position.y / 0.6));
+        if(v != null)
+        {
+            FindObjectOfType<StructureManager>().putShed(v[0], v[1], team);
+        }
+
+    }
     // Update is called once per frame
     void Update()
     {
@@ -35,12 +63,46 @@ public class Antag : MonoBehaviour
 
         if (dest.Item1 == 0 && dest.Item2 == 0)
         {
-            waitTime = UnityEngine.Random.Range(0f, 5f);
+            waitTime = UnityEngine.Random.Range(3f, 7f);
             findRock = !findRock;
             // 5 spawnables, pick one, try to build if we have the res.
-            int rand = ((int)UnityEngine.Random.Range(0, 10));
+            int rand = ((int)UnityEngine.Random.Range(0,10));
 
-            FindObjectOfType<GameState>().spawnBeaver(this.gameObject,team);
+            // continue to cheat like a fuckin bastard
+            var v = findCoordNearby((int)(this.transform.position.x / 0.6f), (int)(this.transform.position.y / 0.6));
+            switch (rand)
+            {
+                case 0:
+                case 6:
+                    FindObjectOfType<GameState>().spawnBeaver(this.gameObject, team);
+                    break;
+                case 1:
+                case 7:
+                    FindObjectOfType<GameState>().spawnGolem(this.gameObject, team);
+                    break;
+                case 2:
+                    FindObjectOfType<GameState>().spawnCaterpillar(this.gameObject, team);
+                    break;
+                case 3:
+                    if (v != null)
+                    {
+                        FindObjectOfType<StructureManager>().putShed(v[0], v[1], team);
+                    }break;
+                case 4:
+                    if (v != null)
+                    {
+                        FindObjectOfType<StructureManager>().putPFact(v[0], v[1], team);
+                    }
+                    break;
+                case 5:
+                case 8:
+                    if (v != null)
+                    {
+                        FindObjectOfType<StructureManager>().putTurret(v[0], v[1], team);
+                    }
+                    break;
+            }
+
 
             /**
             int[] numberOfPieces = new int[] { 2, 2, 0, 0, 0 };

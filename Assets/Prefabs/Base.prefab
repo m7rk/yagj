@@ -939,7 +939,7 @@ GameObject:
   - component: {fileID: 560564608433468493}
   m_Layer: 0
   m_Name: Base
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -994,10 +994,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c28f2c0bb5418334d9a7ffbbe81a658b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivot: {fileID: 0}
-  projectile: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
+  pivot: {fileID: 3536648418731504242}
+  projectileR: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
+  projectileB: {fileID: 7220730281039596975, guid: 843dff0ab6a670b4487a34473d98f3a9, type: 3}
   coolDown: 0
-  turretRange: 10
+  turretRange: 5
 --- !u!61 &560564608433468493
 BoxCollider2D:
   m_ObjectHideFlags: 0

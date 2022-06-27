@@ -30,8 +30,9 @@ public class Turret : MonoBehaviour
                 pivot.transform.right = go.transform.position - pivot.transform.position;
                 var projectile = name[0] == 'R' ? projectileR : projectileB;
                 var v = Instantiate(projectile);
-                v.GetComponent<Projectile>().vel = pivot.transform.right;
+                v.GetComponent<Projectile>().vel = 4 * pivot.transform.right;
                 v.transform.position = pivot.transform.position;
+                pivot.transform.Rotate(new Vector3(0, 0, 45));
                 v.transform.SetParent(null);
             }
             coolDown = 2f;

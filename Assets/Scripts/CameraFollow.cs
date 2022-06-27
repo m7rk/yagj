@@ -32,14 +32,16 @@ public class CameraFollow : MonoBehaviour
     {
         FindObjectOfType<GameState>().putAtBase(player,choseRed);
         FindObjectOfType<GameState>().putAtBase(antag,!choseRed);
-
-        FindObjectOfType<PlayerController>(true).gameObject.SetActive(true);
-        FindObjectOfType<Antag>(true).gameObject.SetActive(true);
         FindObjectOfType<PlayerController>(true).team = choseRed ? 'R' : 'B';
         FindObjectOfType<Antag>(true).team = choseRed ? 'B' : 'R';
+        FindObjectOfType<PlayerController>(true).gameObject.SetActive(true);
+        FindObjectOfType<Antag>(true).gameObject.SetActive(true);
         if (choseRed)
         {
             FindObjectOfType<PlayerController>(true).changeToRed();
+        } else
+        {
+            FindObjectOfType<Antag>(true).changeToRed();
         }
     }
 
