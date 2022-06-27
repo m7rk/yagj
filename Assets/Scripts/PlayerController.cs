@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
             {
                 harvCoord = new int[2] { (int)(worldPosition.x / 0.6), (int)(worldPosition.y / 0.6) };
                 GetComponent<Animator>().SetTrigger("Attack");
-                animTimeout = 2f;
+                animTimeout = 1f;
                 // REALLY need a cut down button
             }
         }

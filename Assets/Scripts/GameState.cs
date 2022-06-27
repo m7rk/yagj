@@ -9,11 +9,11 @@ public class GameState : MonoBehaviour
     public static int MISSION_SEL;
     public class GramCollection
     {
-        public int LT = 5;
-        public int MT = 5;
-        public int ST = 5;
-        public int S = 5;
-        public int P = 5;
+        public int LT = 2;
+        public int MT = 0;
+        public int ST = 2;
+        public int S = 0;
+        public int P = 0;
 
         public void incr(bool player,GramType gramType)
         {

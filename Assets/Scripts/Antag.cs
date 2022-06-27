@@ -102,7 +102,6 @@ public class Antag : MonoBehaviour
                     }
                     break;
                 case 5:
-                case 8:
                     if (v != null)
                     {
                         FindObjectOfType<StructureManager>().putTurret(v[0], v[1], team);
