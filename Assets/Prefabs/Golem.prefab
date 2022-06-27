@@ -111,7 +111,6 @@ MonoBehaviour:
   PLAYER_PUSH_FORCE: 0.5
   WATER_PUSH_FORCE: 0.9
   animTimeout: 0
-  last: {x: 0, y: 0, z: 0}
   collectType: 1
 --- !u!61 &7968647779566896436
 BoxCollider2D:
@@ -172,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43e46241973652469ed11f2df9e5363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: 0
 --- !u!1 &7968647779875139863
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 7968647779875139862}
   - component: {fileID: 7968647779875139861}
   m_Layer: 17
-  m_Name: s
+  m_Name: sC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 7968647780275485883}
   - component: {fileID: 7968647780275485882}
   m_Layer: 17
-  m_Name: legL
+  m_Name: stC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 8738109919601890338}
   - component: {fileID: 8738109919601890339}
   m_Layer: 17
-  m_Name: legR
+  m_Name: stCC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

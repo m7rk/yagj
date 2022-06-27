@@ -176,6 +176,7 @@ public class GameState : MonoBehaviour
                     {
                         found.Add(cons);
                         mainLand.Enqueue(cons);
+
                     }
                 }
             }
@@ -189,6 +190,14 @@ public class GameState : MonoBehaviour
                 if (!found.Contains(new Tuple<int, int>(x, y)))
                 {
                     worldState[x, y] = TerrainType.WATER;
+                }
+                else
+                {
+                    if (worldState[x, y] == TerrainType.GRASS && UnityEngine.Random.Range(0.0f, 1f) < 0.05f)
+                    {
+                        // place a med tri if it is grass.
+                        addPickupable("mt", new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f)));
+                    }
                 }
             }
         }
@@ -255,8 +264,40 @@ public class GameState : MonoBehaviour
     }
 
 
+    static public int[,] getCatPickUpAdapter(char team)
+    {
+        var terrainAdapter = new int[200, 150];
+        for (var x = 0; x != worldState.GetLength(0); ++x)
+        {
+            for (var y = 0; y != worldState.GetLength(1); ++y)
+            {
+                int val = 0;
+                switch (worldState[x, y])
+                {
+                    case TerrainType.GRASS:
+                        val = 0;
+                        break;
+                    case TerrainType.TREES:
+                    case TerrainType.ROCKS:
+                    case TerrainType.STRUCTURE:
+                        val = 1;
+                        break;
+                    case TerrainType.WATER:
+                        val = -1; break;
+                }
+                terrainAdapter[x, y] = val;
+            }
+        }
 
-    static public int[,] getTerrainAdapter()
+        foreach(var v in FindObjectsOfType<Pickupable>())
+        {
+            terrainAdapter[(int)(v.transform.position.x / 0.6f), (int)(v.transform.position.y / 0.6f)] = 2;
+        }
+
+        return terrainAdapter;
+    }
+
+    static public int[,] getTerrainAdapter(char team)
     {
         var terrainAdapter = new int[200, 150];
         for (var x = 0; x != worldState.GetLength(0); ++x)
@@ -272,6 +313,23 @@ public class GameState : MonoBehaviour
                         val = 1; break;
                     case TerrainType.ROCKS:
                         val = 2; break;
+                    case TerrainType.STRUCTURE:
+                        // 3 for friendly, 4 for shed, 5 for enemy.
+                        if (hm.objAt(x, y)[0] == team)
+                        {
+                            if (hm.objAt(x, y) == (team + "shed"))
+                            {
+                                val = 3;
+                            }
+                            else
+                            {
+                                val = 4;
+                            }
+                        } else
+                        {
+                            val = 5;
+                        }
+                        break;
                     case TerrainType.WATER:
                         val = -1; break;
                 }

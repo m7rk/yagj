@@ -16,7 +16,6 @@ public class WobbleAndSort : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(offset + ",,");
 
         int i = 0;
         foreach (Transform child in transform)

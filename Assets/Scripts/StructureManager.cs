@@ -78,6 +78,11 @@ public class StructureManager : MonoBehaviour
         put(t, x, y);
         paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "base";
+        // base is only big turret (this is okay!!)
+        res[new Tuple<int, int>(x+1, y)] = t;
+        res[new Tuple<int, int>(x, y+1)] = t;
+        res[new Tuple<int, int>(x+1, y+1)] = t;
+
     }
     public void putShed(int x, int y, char TID)
     {
@@ -86,6 +91,8 @@ public class StructureManager : MonoBehaviour
         put(t, x, y);
         paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "shed";
+        // fucking hell, jsut make everythign static, dont need these finds()
+        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
 
     public void putTurret(int x, int y, char TID)
@@ -94,6 +101,8 @@ public class StructureManager : MonoBehaviour
         put(t, x, y);
         paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "tur";
+        // fucking hell, jsut make everythign static, dont need these finds()
+        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
     public void putPFact(int x, int y, char TID)
     {
@@ -101,6 +110,8 @@ public class StructureManager : MonoBehaviour
         put(t, x, y);
         paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "pfct";
+        // fucking hell, jsut make everythign static, dont need these finds()
+        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
 
     public string objAt(int x, int y)

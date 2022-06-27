@@ -46,7 +46,7 @@ Animator:
   m_GameObject: {fileID: 696270010649096168}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f8f4c95c57a1a824380c0378af9df079, type: 2}
+  m_Controller: {fileID: 9100000, guid: 47c1f042fbebaf94b98bb5a6ebad4f8d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43e46241973652469ed11f2df9e5363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: 0
 --- !u!1 &2946645314310240868
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +349,7 @@ GameObject:
   - component: {fileID: 2983798368667556517}
   - component: {fileID: 2983798368667556516}
   m_Layer: 17
-  m_Name: stC
+  m_Name: stCC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -432,7 +433,7 @@ GameObject:
   - component: {fileID: 2983798369068692461}
   - component: {fileID: 2983798369068692460}
   m_Layer: 17
-  m_Name: sC
+  m_Name: sCC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

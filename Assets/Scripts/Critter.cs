@@ -16,15 +16,92 @@ public class Critter : MonoBehaviour
     public GTYPE collectType;
 
 
+    public GameObject collectedItem;
+
     public void Start()
     {
-
+        collectedItem = null;
     }
 
     // ask gamestate where nearest resource is.
     public void Update()
     {
+        if (collectType == GTYPE.BEAV || collectType == GTYPE.GOL || collectType == GTYPE.RAT)
+        {
+            gather();
+        }
+        if(collectType == GTYPE.CAT)
+        {
+            collect();
+        }
+    }
 
+    public void tryCollect()
+    {
+        foreach(var v in FindObjectsOfType<Pickupable>())
+        {
+            if (Vector2.Distance(v.transform.position, this.transform.position) < 1f)
+            {
+                collectedItem = v.gameObject;
+                collectedItem.transform.SetParent(this.transform);
+                collectedItem.transform.localPosition = Vector3.zero;
+                collectedItem.transform.localScale = Vector3.one;
+                Destroy(v.GetComponent<Pickupable>());
+                return;
+            }
+        }
+    }
+
+
+    public void tryDeposit()
+    {
+        foreach (var v in FindObjectsOfType<Shed>())
+        {
+            if (Vector2.Distance(v.transform.position,this.transform.position) < 1f)
+            {
+                Destroy(collectedItem);
+                collectedItem = null;
+                // need to get credit for pickup.
+            }
+        }
+    }
+
+    public void collect()
+    {
+
+        int start_x = (int)(this.transform.position.x / 0.6);
+        int start_y = (int)(this.transform.position.y / 0.6);
+
+        if (collectedItem == null)
+        {
+            var ta = GameState.getCatPickUpAdapter(name[0]);
+            var move = CrapBFS.find(start_x, start_y, 2, ta);
+
+            if(move.Item1 == 0 && move.Item2 == 0)
+            {
+                tryCollect();
+            }
+
+            var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
+            this.transform.position += posDelt * Time.deltaTime;
+            this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f, 1f, 1f);
+        }
+        else
+        {
+            var ta = GameState.getTerrainAdapter(name[0]);
+            var move = CrapBFS.find(start_x, start_y, 3, ta);
+            if (move.Item1 == 0 && move.Item2 == 0)
+            {
+                tryDeposit();
+            }
+            var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
+            this.transform.position += posDelt * Time.deltaTime;
+            this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f, 1f, 1f);
+        }
+    }
+
+    public void gather()
+    {
         // grid size is 0.6u
         var p = this.transform.localPosition;
 
@@ -45,30 +122,33 @@ public class Critter : MonoBehaviour
                 {
                     GameState.hm.attack(start_x, start_y);
                 }
+
+                if (collectType == GTYPE.RAT)
+                {
+                    GameState.hm.attack(start_x, start_y);
+                }
             }
 
             animTimeout -= Time.deltaTime;
 
             return;
-        } 
-        //Print2DArray(GameState.terrainAdapter);
-        // var astar = new AStarFunctions.AStar();
-
-
-        // grid size is 0.6u
-        var pl = FindObjectOfType<PlayerController>().transform.localPosition;
-
-        if((int)(p.x / 0.6f) == (int)(pl.x / 0.6) && (int)(p.y / 0.6) ==  (int)(pl.y / 0.6))
-        {
-            return;
         }
 
 
-        var tres = (collectType == GTYPE.BEAV ? GameState.TerrainType.TREES : GameState.TerrainType.ROCKS);
+        var tres = GameState.TerrainType.TREES;
+        int sVal = 1;
+
+        switch(collectType)
+        {
+            case GTYPE.GOL: tres = GameState.TerrainType.ROCKS; sVal = 2; break;
+            case GTYPE.RAT: tres = GameState.TerrainType.STRUCTURE; sVal = 5; break;
+        }
+
+       
 
         //this.transform.position += new Vector3(path[1][0] - path[0][0], path[1][1] - path[0][1]).normalized * Time.deltaTime;
 
-        if (GameState.worldState[start_x,start_y] == tres)
+        if (GameState.worldState[start_x, start_y] == tres)
         {
             // tree cut down
             GetComponentInChildren<Animator>().SetTrigger("Gather");
@@ -84,14 +164,12 @@ public class Critter : MonoBehaviour
             //var path = astar.pathTo(start_x, start_y, to_tile[0], to_tile[1], ta);
             */
 
-            var ta = GameState.getTerrainAdapter();
-            var move = CrapBFS.find(start_x, start_y, collectType == GTYPE.BEAV ? 1 : 2, ta);
-
-            var posDelt = new Vector3(move.Item1,move.Item2,0).normalized;
+            var ta = GameState.getTerrainAdapter(name[0]);
+            var move = CrapBFS.find(start_x, start_y, sVal, ta);
+            var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
             this.transform.position += posDelt * Time.deltaTime;
-            this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f,1f,1f);
+            this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(posDelt.x > 0 ? 1f : -1f, 1f, 1f);
         }
-
     }
     
     public void OnTriggerStay2D(Collider2D other)
@@ -111,6 +189,12 @@ public class Critter : MonoBehaviour
         if (other.tag == "Gatherer")
         {
             transform.position -= (other.transform.position - this.transform.position).normalized * Time.deltaTime * GATHERER_PUSH_FORCE;
+        }
+
+        if (other.tag == "Pickupable")
+        {
+            // caterpiller get
+            Debug.Log("get!");
         }
     }
 }

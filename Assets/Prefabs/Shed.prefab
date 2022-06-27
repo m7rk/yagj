@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3013878198309621222}
   - component: {fileID: 3013878198309621223}
   - component: {fileID: 896860982273371960}
+  - component: {fileID: 6039731708590828328}
   m_Layer: 0
   m_Name: Shed
   m_TagString: Untagged
@@ -77,6 +78,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 2.5}
   m_EdgeRadius: 0
+--- !u!114 &6039731708590828328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3013878198309621225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28cecadc1ead83345ac4c900163cf2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3217742846297746604
 GameObject:
   m_ObjectHideFlags: 0

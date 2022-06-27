@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8670464851335973323}
   m_Layer: 18
   m_Name: mtpickup
-  m_TagString: Untagged
+  m_TagString: Pickupable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

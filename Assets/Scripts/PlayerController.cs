@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    private const float PLAYER_HARVEST_RANGE = 1f;
+    private const float PLAYER_HARVEST_RANGE = 0.6f;
 
     public bool inMenu;
+
+    private int[] harvCoord;
 
     public char team;
     // Start is called before the first frame update
@@ -26,8 +28,8 @@ public class PlayerController : MonoBehaviour
     {
         constructionPrefab = Instantiate(b);
         constructionPrefab.transform.SetParent(null);
-        StructureManager.paint(constructionPrefab, team == 'R' ? new Color(1f,0f,0f,0.5f) : new Color(0f, 0f, 1f, 0.5f));
         constructionPrefab.name = b.name;
+        constructionPrefab.GetComponent<BoxCollider2D>().enabled = false;
     }
 
     // Update is called once per frame
@@ -38,12 +40,11 @@ public class PlayerController : MonoBehaviour
         if (animTimeout > 0)
         {
             GetComponent<Animator>().SetBool("Walking", false);
-            int start_x = (int)(this.transform.position.x / 0.6);
-            int start_y = (int)(this.transform.position.y / 0.6);
+
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                GameState.hm.attack(start_x, start_y);
+                GameState.hm.attack(harvCoord[0],harvCoord[1]);
             }
 
             animTimeout -= Time.deltaTime;
@@ -87,8 +88,13 @@ public class PlayerController : MonoBehaviour
         {
             var cell = GameState.gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
+            // OOB exception? even possible, this??
+            bool valid = (GameState.worldState[cell.x, cell.y] == GameState.TerrainType.GRASS);
+            Color baseCol = team == 'R' ? new Color(1f, 0f, 0f, 0.5f) : new Color(0f, 0f, 1f, 0.5f);
+            StructureManager.paint(constructionPrefab,valid ? baseCol : new Color(1f,1f,1f,0.2f));
+
             constructionPrefab.transform.position = new Vector3(cell.x * 0.6f, cell.y * 0.6f, -10f);
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && valid)
             {
                 switch(constructionPrefab.name)
                 {
@@ -108,6 +114,7 @@ public class PlayerController : MonoBehaviour
             // only attack if within 50 px?
             if (Input.GetMouseButtonDown(0) && (worldPosition - this.transform.position).magnitude < PLAYER_HARVEST_RANGE)
             {
+                harvCoord = new int[2] { (int)(worldPosition.x / 0.6), (int)(worldPosition.y / 0.6) };
                 GetComponent<Animator>().SetTrigger("Attack");
                 animTimeout = 2f;
                 // REALLY need a cut down button

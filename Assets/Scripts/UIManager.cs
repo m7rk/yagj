@@ -113,7 +113,7 @@ public class UIManager : MonoBehaviour
                 return;
             case 1:
                 NAME.text = "GOLEM";
-                DESC.text = "MINES ROCKS.\n.";
+                DESC.text = "MINES ROCKS.\nMENACINGLY.";
                 return;
             case 2:
                 NAME.text = "CATERPILLAR";
@@ -127,9 +127,13 @@ public class UIManager : MonoBehaviour
                 NAME.text = "PGRM FACTORY";
                 DESC.text = "CREATES PARALLELOGRAMS\nINTERMITTENTLY.";
                 return;
+            case 5:
+                NAME.text = "RAT CASTLE";
+                DESC.text = "MAKES RATS, WHICH\nATTACK ENEMIES.";
+                return;
             case 6:
                 NAME.text = "TURRET";
-                DESC.text = "SCARES OFF\nINTRUDERS.";
+                DESC.text = "FIGHTS OFF\nINTRUDERS.";
                 return;
         }
     }
