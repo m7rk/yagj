@@ -21,6 +21,10 @@ public class MainMenuManager : MonoBehaviour
     private int missionNumber;
     private bool isPlayVsAI;
 
+    public Animator fadeAnimator;
+    public float transitionTime = 1f;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +42,7 @@ public class MainMenuManager : MonoBehaviour
             {
                 try
                 {
+                    StartCoroutine(PlayFadeAnimation());
 
                     SceneManager.LoadScene("Mission" + missionNumber);
                 }
@@ -48,6 +53,8 @@ public class MainMenuManager : MonoBehaviour
             }
             else
             {
+                StartCoroutine(PlayFadeAnimation());
+
                 SceneManager.LoadScene("Overworld");
             }
             
@@ -93,5 +100,11 @@ public class MainMenuManager : MonoBehaviour
         isBTangramSelected = true;
     }
 
+    IEnumerator PlayFadeAnimation()
+    {
+        fadeAnimator.SetTrigger("FadeOut");
+
+        yield return new WaitForSeconds(transitionTime);
+    }
 
 }

@@ -30,6 +30,9 @@ public class MissionUIManager : MonoBehaviour
     [SerializeField]
     private bool defeat;
 
+    public Animator fadeAnimator;
+    public float transitionTime = 1f;
+
     void Start()
     {
 
@@ -83,7 +86,9 @@ public class MissionUIManager : MonoBehaviour
 
     public void ReplayMission()
     {
-        // reload the current scene
+
+        StartCoroutine(PlayFadeAnimation());
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -91,22 +96,32 @@ public class MissionUIManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Mission1")
         {
+            StartCoroutine(PlayFadeAnimation());
+
             SceneManager.LoadScene("Mission2");
         }
         else if (SceneManager.GetActiveScene().name == "Mission2")
         {
+            StartCoroutine(PlayFadeAnimation());
+
             SceneManager.LoadScene("Mission3");
         }
         else if (SceneManager.GetActiveScene().name == "Mission3")
         {
+            StartCoroutine(PlayFadeAnimation());
+
             SceneManager.LoadScene("Mission4");
         }
         else if (SceneManager.GetActiveScene().name == "Mission4")
         {
+            StartCoroutine(PlayFadeAnimation());
+
             SceneManager.LoadScene("Mission5");
         }
         else
         {
+            StartCoroutine(PlayFadeAnimation());
+
             SceneManager.LoadScene("MainMenu");
         }
     }
@@ -115,6 +130,8 @@ public class MissionUIManager : MonoBehaviour
         // if the game is paused and the main menu button is clicked, resume the time
         if (Time.timeScale == 0)
             Time.timeScale = 1;
+
+        StartCoroutine(PlayFadeAnimation());
 
         SceneManager.LoadScene("MainMenu");
     }
@@ -131,5 +148,12 @@ public class MissionUIManager : MonoBehaviour
         pausePanel.SetActive(false);
         // unpause the game
         Time.timeScale = 1;
+    }
+
+    IEnumerator PlayFadeAnimation()
+    {
+        fadeAnimator.SetTrigger("Start");
+
+        yield return new WaitForSeconds(transitionTime);
     }
 }
