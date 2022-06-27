@@ -78,6 +78,10 @@ public class StructureManager : MonoBehaviour
 
     public string objAt(int x, int y)
     {
+        if (!res.ContainsKey(new Tuple<int, int>(x, y)))
+        {
+            return "";
+        }
         return res[new Tuple<int, int>(x, y)].name;
     }
 

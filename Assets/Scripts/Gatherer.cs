@@ -53,12 +53,12 @@ public class Gatherer : MonoBehaviour
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                if (collectType == GTYPE.WOOD && GameState.hm.objAt(start_x, start_x) == "tree")
+                if (collectType == GTYPE.WOOD && GameState.hm.objAt(start_x, start_y) == "tree")
                 {
                     GameState.hm.attack(start_x, start_y);
                 }
 
-                if (collectType == GTYPE.MINE && GameState.hm.objAt(start_x, start_x) == "rock")
+                if (collectType == GTYPE.MINE && GameState.hm.objAt(start_x, start_y) == "rock")
                 {
                     GameState.hm.attack(start_x, start_y);
                 }
