@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
                 {
                     case "Shed": FindObjectOfType<StructureManager>().putShed(cell.x, cell.y, team); break;
                     case "Turret": FindObjectOfType<StructureManager>().putTurret(cell.x, cell.y, team); break;
-                    case "PFactory": FindObjectOfType<StructureManager>().putPFact(cell.x, cell.y, team); break;
+                    case "Factory": FindObjectOfType<StructureManager>().putPFact(cell.x, cell.y, team); break;
                 }
                 // use name to build (shitty)
                 

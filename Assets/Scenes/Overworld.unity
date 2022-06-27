@@ -1566,7 +1566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &311526523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2533,6 +2533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 916566660}
   antag: {fileID: 642862581}
+  book: {fileID: 311526522}
   btnBase: {fileID: 1041102737}
 --- !u!114 &519420034
 MonoBehaviour:
@@ -4408,7 +4409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &916566662
 Transform:
   m_ObjectHideFlags: 0
@@ -8580,9 +8581,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d91501ab78cdd3644a0daf56d97e33dd, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
