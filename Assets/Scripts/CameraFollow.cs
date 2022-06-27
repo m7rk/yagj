@@ -8,6 +8,7 @@ public class CameraFollow : MonoBehaviour
 
     public GameObject player;
     public GameObject antag;
+    public GameObject book;
 
     private bool sidePicked = false;
 
@@ -43,6 +44,7 @@ public class CameraFollow : MonoBehaviour
         {
             FindObjectOfType<Antag>(true).changeToRed();
         }
+        book.SetActive(true);
     }
 
     public void pickRed()

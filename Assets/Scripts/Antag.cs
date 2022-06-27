@@ -70,13 +70,16 @@ public class Antag : MonoBehaviour
 
         if (dest.Item1 == 0 && dest.Item2 == 0)
         {
-            waitTime = UnityEngine.Random.Range(3f, 7f);
+            waitTime = UnityEngine.Random.Range(8f, 16f);
             findRock = !findRock;
             // 5 spawnables, pick one, try to build if we have the res.
             int rand = ((int)UnityEngine.Random.Range(0,10));
 
             // continue to cheat like a fuckin bastard
             var v = findCoordNearby((int)(this.transform.position.x / 0.6f), (int)(this.transform.position.y / 0.6));
+
+
+            this.transform.GetComponentInChildren<Animator>().transform.localScale = new Vector3(v[0] > 0f ? 0.2f : -0.2f, 0.2f, 0.2f);
             switch (rand)
             {
                 case 0:
