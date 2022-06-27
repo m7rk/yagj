@@ -249,6 +249,8 @@ public class GameState : MonoBehaviour
         player.transform.localPosition = new Vector3(first[0] * 0.6f, first[1] * 0.6f, this.transform.localPosition.z);
     }
 
+
+
     static public int[,] getTerrainAdapter()
     {
         var terrainAdapter = new int[200, 150];
@@ -279,23 +281,26 @@ public class GameState : MonoBehaviour
         return new Vector3(UnityEngine.Random.Range(-0.01f, 0.01f), UnityEngine.Random.Range(-0.01f, 0.01f),0);
     }
 
-    public void spawnBeaver()
+    public void spawnBeaver(char team)
     {
         var v = Instantiate(beaver);
+        StructureManager.paint(v.GetComponentInChildren<Animator>().gameObject, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
     }
 
-    public void spawnGolem()
+    public void spawnGolem(char team)
     {
         var v = Instantiate(golem);
+        StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
     }
 
-    public void spawnCaterpillar()
+    public void spawnCaterpillar(char team)
     {
         var v = Instantiate(caterpillar);
+        StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
     }

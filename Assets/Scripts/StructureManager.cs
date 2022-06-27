@@ -28,6 +28,28 @@ public class StructureManager : MonoBehaviour
     {
         
     }
+    public static void paint(GameObject obj, Color col)
+    {
+        foreach (Transform child in obj.transform)
+        {
+            if (child.GetComponent<SpriteRenderer>())
+            {
+                if (child.name[child.name.Length - 1] == 'C')
+                {
+                    child.GetComponent<SpriteRenderer>().color = col;
+                }
+            }
+
+            foreach (Transform child2 in child)
+            {
+                // color if name ends with cap C
+                if (child2.name[child2.name.Length - 1] == 'C')
+                {
+                    child2.GetComponent<SpriteRenderer>().color = col;
+                }
+            }
+        }
+    }
 
     public void plantTree(int x, int y)
     {
@@ -54,12 +76,14 @@ public class StructureManager : MonoBehaviour
     {
         var t = Instantiate(rbase);
         put(t, x, y);
+        paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "base";
     }
     public void putShed(int x, int y, char TID)
     {
         var t = Instantiate(shed);
         put(t, x, y);
+        paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "shed";
     }
 
@@ -67,12 +91,14 @@ public class StructureManager : MonoBehaviour
     {
         var t = Instantiate(turret);
         put(t, x, y);
+        paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "tur";
     }
     public void putPFact(int x, int y, char TID)
     {
         var t = Instantiate(pFactory);
         put(t, x, y);
+        paint(t, (TID == 'R' ? Color.red : Color.blue));
         t.name = TID + "pfct";
     }
 

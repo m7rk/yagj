@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private const float PLAYER_HARVEST_RANGE = 60f;
 
     public bool inMenu;
+
+    public char team;
     // Start is called before the first frame update
     void Start()
     {

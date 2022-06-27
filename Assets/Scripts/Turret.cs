@@ -23,7 +23,10 @@ public class Turret : MonoBehaviour
         coolDown -= Time.deltaTime;
         if(coolDown < 0)
         {
-
+            var v = Instantiate(projectile);
+            v.transform.position = this.transform.position;
+            v.transform.SetParent(null);
+            coolDown = 2f;
         }
     }
 }

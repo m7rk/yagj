@@ -219,9 +219,9 @@ public class UIManager : MonoBehaviour
         closeBook();
         switch(recIdxLoaded)
         {
-            case 0: gs.spawnBeaver(); return;
-            case 1: gs.spawnGolem(); return;
-            case 2: gs.spawnCaterpillar(); return;
+            case 0: gs.spawnBeaver(FindObjectOfType<PlayerController>().team); return;
+            case 1: gs.spawnGolem(FindObjectOfType<PlayerController>().team); return;
+            case 2: gs.spawnCaterpillar(FindObjectOfType<PlayerController>().team); return;
             case 3: gs.spawnShed(); return;
             case 4: gs.spawnPFactory(); return;
             case 6: gs.spawnTurret(); return;

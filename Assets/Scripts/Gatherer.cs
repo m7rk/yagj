@@ -6,35 +6,17 @@ public class Gatherer : MonoBehaviour
 {
     GameState gs;
 
-    public float GATHERER_PUSH_FORCE = 0.5f;
+    public float GATHERER_PUSH_FORCE = 0.2f;
     public float PLAYER_PUSH_FORCE = 0.5f;
-    public float WATER_PUSH_FORCE = 0.9f;
+    public float WATER_PUSH_FORCE = 2f;
 
     public float animTimeout = 0f;
-    public Vector3 last;
     public enum GTYPE { WOOD, MINE, RES }
 
     public GTYPE collectType;
 
     public void Start()
     {
-        foreach (Transform child in transform.GetComponentInChildren<Animator>().transform)
-        {
-            if (child.GetComponent<SpriteRenderer>())
-            {
-                child.GetComponent<SpriteRenderer>().color = Color.blue;
-            }
-
-            foreach (Transform child2 in child)
-            {
-                // color if name ends with cap C
-                if (child2.name[child2.name.Length - 1] == 'C')
-                {
-                    child2.GetComponent<SpriteRenderer>().color = Color.blue;
-                }
-            }
-        }
-
 
     }
 
@@ -116,13 +98,13 @@ public class Gatherer : MonoBehaviour
 
         if (other.tag == "Player")
         {
-            last = this.transform.position;
             transform.position -= (other.transform.position - this.transform.position).normalized * Time.deltaTime * PLAYER_PUSH_FORCE;
         }
 
         if (other.tag == "Water")
         {
-            transform.position = last;
+            var colpt = other.ClosestPoint(this.transform.position);
+            transform.position -= (new Vector3(colpt.x,colpt.y,this.transform.position.z) - this.transform.position).normalized * Time.deltaTime * WATER_PUSH_FORCE;
         }
 
         if (other.tag == "Gatherer")
