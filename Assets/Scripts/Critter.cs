@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gatherer : MonoBehaviour
+public class Critter : MonoBehaviour
 {
     GameState gs;
 
@@ -11,9 +11,10 @@ public class Gatherer : MonoBehaviour
     public float WATER_PUSH_FORCE = 2f;
 
     public float animTimeout = 0f;
-    public enum GTYPE { WOOD, MINE, RES }
+    public enum GTYPE { BEAV, GOL, CAT, RAT }
 
     public GTYPE collectType;
+
 
     public void Start()
     {
@@ -35,12 +36,12 @@ public class Gatherer : MonoBehaviour
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                if (collectType == GTYPE.WOOD && GameState.hm.objAt(start_x, start_y) == "tree")
+                if (collectType == GTYPE.BEAV && GameState.hm.objAt(start_x, start_y) == "tree")
                 {
                     GameState.hm.attack(start_x, start_y);
                 }
 
-                if (collectType == GTYPE.MINE && GameState.hm.objAt(start_x, start_y) == "rock")
+                if (collectType == GTYPE.GOL && GameState.hm.objAt(start_x, start_y) == "rock")
                 {
                     GameState.hm.attack(start_x, start_y);
                 }
@@ -63,11 +64,11 @@ public class Gatherer : MonoBehaviour
         }
 
 
-        var tres = (collectType == GTYPE.WOOD ? GameState.TerrainType.TREES : GameState.TerrainType.ROCKS);
+        var tres = (collectType == GTYPE.BEAV ? GameState.TerrainType.TREES : GameState.TerrainType.ROCKS);
 
         //this.transform.position += new Vector3(path[1][0] - path[0][0], path[1][1] - path[0][1]).normalized * Time.deltaTime;
 
-        if (GameState.naturalWorldState[start_x,start_y] == tres)
+        if (GameState.worldState[start_x,start_y] == tres)
         {
             // tree cut down
             GetComponentInChildren<Animator>().SetTrigger("Gather");
@@ -84,7 +85,7 @@ public class Gatherer : MonoBehaviour
             */
 
             var ta = GameState.getTerrainAdapter();
-            var move = CrapBFS.find(start_x, start_y, collectType == GTYPE.WOOD ? 1 : 2, ta);
+            var move = CrapBFS.find(start_x, start_y, collectType == GTYPE.BEAV ? 1 : 2, ta);
 
             var posDelt = new Vector3(move.Item1,move.Item2,0).normalized;
             this.transform.position += posDelt * Time.deltaTime;

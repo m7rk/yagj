@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    private const float PLAYER_HARVEST_RANGE = 60f;
+    private const float PLAYER_HARVEST_RANGE = 1f;
 
     public bool inMenu;
 
@@ -14,22 +14,20 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         inMenu = false;
+        team = 'R';
     }
 
     GameObject constructionPrefab = null;
 
     public float animTimeout = 0f;
 
-    private char teamName = 'R';
 
     public void createConstPrefab(GameObject b)
     {
         constructionPrefab = Instantiate(b);
         constructionPrefab.transform.SetParent(null);
-        foreach(Transform child in constructionPrefab.transform)
-        {
-            child.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
-        }
+        StructureManager.paint(constructionPrefab, team == 'R' ? new Color(1f,0f,0f,0.5f) : new Color(0f, 0f, 1f, 0.5f));
+        constructionPrefab.name = b.name;
     }
 
     // Update is called once per frame
@@ -88,16 +86,25 @@ public class PlayerController : MonoBehaviour
         if (constructionPrefab != null)
         {
             var cell = GameState.gm.terrWalkable.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+            constructionPrefab.transform.position = new Vector3(cell.x * 0.6f, cell.y * 0.6f, -10f);
             if (Input.GetMouseButtonDown(0))
             {
-                // huh?
-                FindObjectOfType<StructureManager>().putTurret(cell.x, cell.y, teamName);
+                switch(constructionPrefab.name)
+                {
+                    case "Shed": FindObjectOfType<StructureManager>().putShed(cell.x, cell.y, team); break;
+                    case "Turret": FindObjectOfType<StructureManager>().putTurret(cell.x, cell.y, team); break;
+                    case "PFactory": FindObjectOfType<StructureManager>().putPFact(cell.x, cell.y, team); break;
+                }
+                // use name to build (shitty)
+                
                 Destroy(constructionPrefab);
                 constructionPrefab = null;
             }
         }
         else
         {
+            worldPosition.z = this.transform.position.z;
             // only attack if within 50 px?
             if (Input.GetMouseButtonDown(0) && (worldPosition - this.transform.position).magnitude < PLAYER_HARVEST_RANGE)
             {

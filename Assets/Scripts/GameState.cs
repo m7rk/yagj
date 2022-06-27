@@ -67,7 +67,10 @@ public class GameState : MonoBehaviour
     }
 
     public enum GramType { LT, MT, ST, S, P }
-    public enum TerrainType { WATER, GRASS, ROCKS, TREES }
+
+    // This seems super terrible. "Structure" gives no data
+    // for now though it's a quick "pass or impass" filter
+    public enum TerrainType { WATER, GRASS, ROCKS, TREES, STRUCTURE }
 
     // reference to player
     public GameObject player;
@@ -92,7 +95,7 @@ public class GameState : MonoBehaviour
 
 
     // this is the rocks, water, trees, grass.
-    public static TerrainType[,] naturalWorldState;
+    public static TerrainType[,] worldState;
 
     // etc
     public static GridManager gm;
@@ -115,39 +118,39 @@ public class GameState : MonoBehaviour
         int DIMY = 100;
 
         var seed = UnityEngine.Random.Range(0f, 100f);
-        naturalWorldState = new TerrainType[DIMX, DIMY];
+        worldState = new TerrainType[DIMX, DIMY];
 
         // first pass, generate the basic rough outline of the world.
-        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        for (var x = 0; x != worldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            for (var y = 0; y != worldState.GetLength(1); ++y)
             {
                 var basePerlin = Mathf.Max(0.4f, Mathf.PerlinNoise((seed + x) / 5f, (seed + y) / 5f));
-                var yFalloff = 2f * (Mathf.Abs(y - (naturalWorldState.GetLength(1) / 2)) / (float)naturalWorldState.GetLength(1));
-                var xFalloff = 2f * (Mathf.Abs(x - (naturalWorldState.GetLength(0) / 2)) / (float)naturalWorldState.GetLength(0));
+                var yFalloff = 2f * (Mathf.Abs(y - (worldState.GetLength(1) / 2)) / (float)worldState.GetLength(1));
+                var xFalloff = 2f * (Mathf.Abs(x - (worldState.GetLength(0) / 2)) / (float)worldState.GetLength(0));
 
                 bool land = (basePerlin + -xFalloff + -yFalloff) > 0;
 
                 if (land)
                 {
-                    naturalWorldState[x, y] = TerrainType.GRASS;
+                    worldState[x, y] = TerrainType.GRASS;
 
                     // high freq noise for rocks, trees.
                     var resPerlin = Mathf.PerlinNoise(((seed*2) + x) / 4f, ((seed*4) + y) / 4f);
 
                     if (resPerlin < 0.25f)
                     {
-                        naturalWorldState[x, y] = TerrainType.TREES;
+                        worldState[x, y] = TerrainType.TREES;
                     }
 
                     if (resPerlin > 0.75f)
                     {
-                        naturalWorldState[x, y] = TerrainType.ROCKS;
+                        worldState[x, y] = TerrainType.ROCKS;
                     }
                 } else
                 {
 
-                    naturalWorldState[x, y] = TerrainType.WATER;
+                    worldState[x, y] = TerrainType.WATER;
                 }
             }
         }
@@ -167,7 +170,7 @@ public class GameState : MonoBehaviour
 
                 if (!found.Contains(cons))
                 {
-                    if(naturalWorldState[cons.Item1,cons.Item2] != TerrainType.WATER)
+                    if(worldState[cons.Item1,cons.Item2] != TerrainType.WATER)
                     {
                         found.Add(cons);
                         mainLand.Enqueue(cons);
@@ -177,13 +180,13 @@ public class GameState : MonoBehaviour
         }
 
         // remove everything not on the mainland.
-        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        for (var x = 0; x != worldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            for (var y = 0; y != worldState.GetLength(1); ++y)
             {
                 if (!found.Contains(new Tuple<int, int>(x, y)))
                 {
-                    naturalWorldState[x, y] = TerrainType.WATER;
+                    worldState[x, y] = TerrainType.WATER;
                 }
             }
         }
@@ -191,23 +194,23 @@ public class GameState : MonoBehaviour
         // Now place bases on the map.
         int[] first = null;
         int[] second = null;
-        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        for (var x = 0; x != worldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            for (var y = 0; y != worldState.GetLength(1); ++y)
             {
-                if(first == null && naturalWorldState[x,y] != TerrainType.WATER)
+                if(first == null && worldState[x,y] != TerrainType.WATER)
                 {
                     // candidate
-                    if(naturalWorldState[x+1,y] != TerrainType.WATER && naturalWorldState[x+1,y+1] != TerrainType.WATER && naturalWorldState[x,y+1] == TerrainType.WATER)
+                    if(worldState[x+1,y] != TerrainType.WATER && worldState[x+1,y+1] != TerrainType.WATER && worldState[x,y+1] == TerrainType.WATER)
                     {
                         first = new int[2] { x, y };
                     }
                 }
 
-                if (naturalWorldState[x, y] != TerrainType.WATER)
+                if (worldState[x, y] != TerrainType.WATER)
                 {
                     // candidate
-                    if (naturalWorldState[x + 1, y] != TerrainType.WATER && naturalWorldState[x + 1, y + 1] != TerrainType.WATER && naturalWorldState[x, y + 1] == TerrainType.WATER)
+                    if (worldState[x + 1, y] != TerrainType.WATER && worldState[x + 1, y + 1] != TerrainType.WATER && worldState[x, y + 1] == TerrainType.WATER)
                     {
                         second = new int[2] { x, y };
                     }
@@ -215,28 +218,28 @@ public class GameState : MonoBehaviour
             }
         }
 
-        naturalWorldState[first[0],first[1]] = TerrainType.GRASS;
-        naturalWorldState[first[0]+1, first[1]] = TerrainType.GRASS;
-        naturalWorldState[first[0], first[1]+1] = TerrainType.GRASS;
-        naturalWorldState[first[0]+1, first[1]+1] = TerrainType.GRASS;
+        worldState[first[0],first[1]] = TerrainType.GRASS;
+        worldState[first[0]+1, first[1]] = TerrainType.GRASS;
+        worldState[first[0], first[1]+1] = TerrainType.GRASS;
+        worldState[first[0]+1, first[1]+1] = TerrainType.GRASS;
 
-        naturalWorldState[second[0], second[1]] = TerrainType.GRASS;
-        naturalWorldState[second[0] + 1, second[1]] = TerrainType.GRASS;
-        naturalWorldState[second[0], second[1] + 1] = TerrainType.GRASS;
-        naturalWorldState[second[0] + 1, second[1] + 1] = TerrainType.GRASS;
+        worldState[second[0], second[1]] = TerrainType.GRASS;
+        worldState[second[0] + 1, second[1]] = TerrainType.GRASS;
+        worldState[second[0], second[1] + 1] = TerrainType.GRASS;
+        worldState[second[0] + 1, second[1] + 1] = TerrainType.GRASS;
 
-        gm.Create(naturalWorldState);
+        gm.Create(worldState);
 
         // there's space (for a base)
-        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        for (var x = 0; x != worldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            for (var y = 0; y != worldState.GetLength(1); ++y)
             {
-                if (naturalWorldState[x, y] == TerrainType.TREES)
+                if (worldState[x, y] == TerrainType.TREES)
                 {
                     hm.plantTree(x, y);
                 }
-                if (naturalWorldState[x, y] == TerrainType.ROCKS)
+                if (worldState[x, y] == TerrainType.ROCKS)
                 {
                     hm.plantRocks(x, y);
                 }
@@ -246,7 +249,7 @@ public class GameState : MonoBehaviour
         FindObjectOfType<StructureManager>().putBase(first[0], first[1], 'R');
         FindObjectOfType<StructureManager>().putBase(second[0], second[1], 'B');
 
-        player.transform.localPosition = new Vector3(first[0] * 0.6f, first[1] * 0.6f, this.transform.localPosition.z);
+        player.transform.localPosition = new Vector3(0.3f + first[0] * 0.6f, 0.3f + first[1] * 0.6f, this.transform.localPosition.z);
     }
 
 
@@ -254,12 +257,12 @@ public class GameState : MonoBehaviour
     static public int[,] getTerrainAdapter()
     {
         var terrainAdapter = new int[200, 150];
-        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        for (var x = 0; x != worldState.GetLength(0); ++x)
         {
-            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            for (var y = 0; y != worldState.GetLength(1); ++y)
             {
                 int val = 0;
-                switch (naturalWorldState[x, y])
+                switch (worldState[x, y])
                 {
                     case TerrainType.GRASS:
                         val = 0; break;
@@ -287,6 +290,7 @@ public class GameState : MonoBehaviour
         StructureManager.paint(v.GetComponentInChildren<Animator>().gameObject, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
+        v.name = (team.ToString() + "beaver");
     }
 
     public void spawnGolem(char team)
@@ -295,6 +299,7 @@ public class GameState : MonoBehaviour
         StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
+        v.name = (team.ToString() + "golem");
     }
 
     public void spawnCaterpillar(char team)
@@ -303,6 +308,7 @@ public class GameState : MonoBehaviour
         StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
+        v.name = (team.ToString() + "caterpillar");
     }
 
     public void spawnTurret()

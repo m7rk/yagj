@@ -179,12 +179,14 @@ public class UIManager : MonoBehaviour
     public void openBook()
     {
         book.SetActive(true);
+        FindObjectOfType<PlayerController>().inMenu = true;
         GetComponent<AudioSource>().PlayOneShot(bookOpen);
     }
 
     public void closeBook()
     {
         book.SetActive(false);
+        FindObjectOfType<PlayerController>().inMenu = false;
         GetComponent<AudioSource>().PlayOneShot(bookClose);
     }
 

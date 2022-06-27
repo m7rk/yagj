@@ -122,27 +122,30 @@ public class StructureManager : MonoBehaviour
         var harvested = res[new Tuple<int, int>(x, y)].transform.GetChild(0);
 
         // fuck
-        FindObjectOfType<GameState>().addPickupable(harvested.name, new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f,0.4f)));
+        FindObjectOfType<GameState>().addPickupable(harvested.name.Replace("C",""), new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f,0.4f)));
    
         if(res[new Tuple<int, int>(x, y)].transform.childCount == 1)
         {
             // res exhaused 
             Destroy(res[new Tuple<int, int>(x, y)].gameObject);
+
+
+            if(res[new Tuple<int, int>(x, y)].name == "Bbase")
+            {
+                // red victory
+                // end game in 10 s.
+                FindObjectOfType<UIManager>().redVictory();
+            }
+
+            if (res[new Tuple<int, int>(x, y)].name == "Rbase")
+            {
+                // red victory
+                // end game in 10 s.
+                FindObjectOfType<UIManager>().blueVictory();
+            }
+
             res.Remove(new Tuple<int, int>(x, y));
-            GameState.naturalWorldState[x, y] = GameState.TerrainType.GRASS;
-
-            if(name == "Bbase")
-            {
-                // red victory
-                // end game in 10 s.
-            }
-
-            if (name == "Rbase")
-            {
-                // red victory
-                // end game in 10 s.
-            }
-
+            GameState.worldState[x, y] = GameState.TerrainType.GRASS;
         }
         
 

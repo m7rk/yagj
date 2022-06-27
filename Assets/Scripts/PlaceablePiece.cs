@@ -26,12 +26,12 @@ public class PlaceablePiece : MonoBehaviour
             // allows to drag the sprite around the world using its local position
             this.gameObject.GetComponent<RectTransform>().localPosition = new Vector3(mousePos.x , mousePos.y, this.gameObject.transform.localPosition.z);
 
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 this.transform.Rotate(new Vector3(0.0f, 0.0f, 45f));
             }
 
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.D))
             {
                 this.transform.Rotate(new Vector3(0.0f, 0.0f, -45f));
             }

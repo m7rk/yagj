@@ -9,6 +9,8 @@ public class Turret : MonoBehaviour
     public GameObject projectile;
 
     public float coolDown = 0f;
+
+    public float turretRange = 10f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,15 +20,40 @@ public class Turret : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pivot.transform.right = FindObjectOfType<PlayerController>().transform.position - pivot.transform.position;
-
         coolDown -= Time.deltaTime;
         if(coolDown < 0)
         {
-            var v = Instantiate(projectile);
-            v.transform.position = this.transform.position;
-            v.transform.SetParent(null);
+            var go = acquireTarget();
+            if (go != null)
+            {
+                pivot.transform.right = go.transform.position - pivot.transform.position;
+                var v = Instantiate(projectile);
+                v.GetComponent<Projectile>().vel = pivot.transform.right;
+                v.transform.position = pivot.transform.position;
+                v.transform.SetParent(null);
+            }
             coolDown = 2f;
         }
+    }
+
+    public GameObject acquireTarget()
+    {
+        GameObject closest = null;
+        float bestDist = 100000000;
+
+        foreach(var v in FindObjectsOfType<Critter>())
+        {
+            var dist = Vector2.Distance(this.transform.position, v.transform.position);
+            if(v.name[0] != name[0] && dist < bestDist)
+            {
+                closest = v.gameObject;
+                bestDist = dist;
+            }
+        }
+        if (bestDist < turretRange)
+        {
+            return closest;
+        }
+        return null;
     }
 }

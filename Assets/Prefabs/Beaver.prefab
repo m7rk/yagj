@@ -191,8 +191,7 @@ MonoBehaviour:
   PLAYER_PUSH_FORCE: 0.5
   WATER_PUSH_FORCE: 0.9
   animTimeout: 0
-  last: {x: 0, y: 0, z: 0}
-  collectTrees: 1
+  collectType: 0
 --- !u!61 &3206213593263515838
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -263,7 +262,7 @@ GameObject:
   - component: {fileID: 3206213593563651228}
   - component: {fileID: 3206213593563651231}
   m_Layer: 17
-  m_Name: s
+  m_Name: sC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,7 +349,7 @@ GameObject:
   - component: {fileID: 3206213593696309553}
   - component: {fileID: 3206213593696309552}
   m_Layer: 17
-  m_Name: st
+  m_Name: stC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
