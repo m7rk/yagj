@@ -9,7 +9,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Destroy(gameObject, 5f);
     }
 
     // Update is called once per frame
@@ -18,4 +18,6 @@ public class Projectile : MonoBehaviour
         transform.Rotate(new Vector3(0, 0, 90 * Time.deltaTime));
         this.transform.position += vel * Time.deltaTime;
     }
+
+    
 }

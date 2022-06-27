@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    // really need to clean this up.
+
     public GameObject player;
+    public GameObject antag;
+
     private bool sidePicked = false;
 
     public GameObject btnBase;
@@ -20,12 +24,22 @@ public class CameraFollow : MonoBehaviour
     {
         if (sidePicked)
         {
-            FindObjectOfType<GameState>().putPlayerAtBase(choseRed);
-            FindObjectOfType<PlayerController>(true).gameObject.SetActive(true);
-            FindObjectOfType<PlayerController>(true).team = choseRed ? 'R' : 'B';
-            FindObjectOfType<PlayerController>(true).changeToRed();
-
             this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -100);
+        }
+    }
+
+    void setUp()
+    {
+        FindObjectOfType<GameState>().putAtBase(player,choseRed);
+        FindObjectOfType<GameState>().putAtBase(antag,!choseRed);
+
+        FindObjectOfType<PlayerController>(true).gameObject.SetActive(true);
+        FindObjectOfType<Antag>(true).gameObject.SetActive(true);
+        FindObjectOfType<PlayerController>(true).team = choseRed ? 'R' : 'B';
+        FindObjectOfType<Antag>(true).team = choseRed ? 'B' : 'R';
+        if (choseRed)
+        {
+            FindObjectOfType<PlayerController>(true).changeToRed();
         }
     }
 
@@ -35,6 +49,7 @@ public class CameraFollow : MonoBehaviour
         sidePicked = true;
         Destroy(btnBase);
         this.transform.localScale = Vector3.one;
+        setUp();
     }
 
     public void pickBlue()
@@ -42,5 +57,6 @@ public class CameraFollow : MonoBehaviour
         sidePicked = true;
         Destroy(btnBase);
         this.transform.localScale = Vector3.one;
+        setUp();
     }
 }

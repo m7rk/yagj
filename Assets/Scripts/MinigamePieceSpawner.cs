@@ -41,7 +41,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
     {
         foreach(var v in spawnedPieces)
         {
-            gs.p1.incr(v.tag);
+            gs.p1.incr(true,v.tag);
             Destroy(v);
         }
         spawnedPieces = new List<GameObject>();
@@ -68,7 +68,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
             }
             else
             {
-                gs.p1.incr(currPiece.tag);
+                gs.p1.incr(true,currPiece.tag);
             }
             currPiece = null;
         }

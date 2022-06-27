@@ -15,9 +15,13 @@ public class GameState : MonoBehaviour
         public int S = 5;
         public int P = 5;
 
-        public void incr(GramType gramType)
+        public void incr(bool player,GramType gramType)
         {
-            FindObjectOfType<UIManager>().setIncrFlash(gramType);
+            if (player)
+            {
+                FindObjectOfType<UIManager>().setIncrFlash(gramType);
+            }
+
             switch (gramType)
             {
                 case GameState.GramType.LT:
@@ -50,20 +54,20 @@ public class GameState : MonoBehaviour
             }
         }
 
-        public void incr(string gramType)
+        public void incr(bool player,string gramType)
         {
             switch (gramType)
             {
                 case "lt":
-                    incr(GramType.LT); break;
+                    incr(player,GramType.LT); break;
                 case "mt":
-                    incr(GramType.MT); break;
+                    incr(player, GramType.MT); break;
                 case "st":
-                    incr(GramType.ST); break;
+                    incr(player, GramType.ST); break;
                 case "p":
-                    incr(GramType.P); break;
+                    incr(player, GramType.P); break;
                 case "s":
-                    incr(GramType.S); break;
+                    incr(player, GramType.S); break;
             }
         }
     }
@@ -74,8 +78,7 @@ public class GameState : MonoBehaviour
     // for now though it's a quick "pass or impass" filter
     public enum TerrainType { WATER, GRASS, ROCKS, TREES, STRUCTURE }
 
-    // reference to player
-    public GameObject player;
+
 
     public GameObject pickupParent;
 
@@ -261,17 +264,16 @@ public class GameState : MonoBehaviour
         FindObjectOfType<StructureManager>().putBase(redSpawn[0], redSpawn[1], 'R');
         FindObjectOfType<StructureManager>().putBase(blueSpawn[0], blueSpawn[1], 'B');
 
-        player.SetActive(false);
     }
 
-    public void putPlayerAtBase(bool red)
+    public void putAtBase(GameObject p, bool red)
     {
         if (red)
         {
-            player.transform.localPosition = new Vector3(0.3f + redSpawn[0] * 0.6f, 0.3f + redSpawn[1] * 0.6f, this.transform.localPosition.z);
+            p.transform.localPosition = new Vector3(0.3f + redSpawn[0] * 0.6f, 0.3f + redSpawn[1] * 0.6f, this.transform.localPosition.z);
         } else
         {
-            player.transform.localPosition = new Vector3(0.3f + blueSpawn[0] * 0.6f, 0.3f + blueSpawn[1] * 0.6f, this.transform.localPosition.z);
+            p.transform.localPosition = new Vector3(0.3f + blueSpawn[0] * 0.6f, 0.3f + blueSpawn[1] * 0.6f, this.transform.localPosition.z);
 
         }
     }
@@ -356,7 +358,7 @@ public class GameState : MonoBehaviour
         return new Vector3(UnityEngine.Random.Range(-0.01f, 0.01f), UnityEngine.Random.Range(-0.01f, 0.01f),0);
     }
 
-    public void spawnBeaver(char team)
+    public void spawnBeaver(GameObject player, char team)
     {
         var v = Instantiate(beaver);
         StructureManager.paint(v.GetComponentInChildren<Animator>().gameObject, (team == 'R' ? Color.red : Color.blue));
@@ -365,7 +367,7 @@ public class GameState : MonoBehaviour
         v.name = (team.ToString() + "beaver");
     }
 
-    public void spawnGolem(char team)
+    public void spawnGolem(GameObject player, char team)
     {
         var v = Instantiate(golem);
         StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
@@ -374,7 +376,7 @@ public class GameState : MonoBehaviour
         v.name = (team.ToString() + "golem");
     }
 
-    public void spawnCaterpillar(char team)
+    public void spawnCaterpillar(GameObject player, char team)
     {
         var v = Instantiate(caterpillar);
         StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
@@ -385,17 +387,17 @@ public class GameState : MonoBehaviour
 
     public void spawnTurret()
     {
-        player.GetComponent<PlayerController>().createConstPrefab(turret);
+        FindObjectOfType<PlayerController>().GetComponent<PlayerController>().createConstPrefab(turret);
     }
 
     public void spawnShed()
     {
-        player.GetComponent<PlayerController>().createConstPrefab(shed);
+        FindObjectOfType<PlayerController>().createConstPrefab(shed);
     }
 
     public void spawnPFactory()
     {
-        player.GetComponent<PlayerController>().createConstPrefab(pFactory);
+        FindObjectOfType<PlayerController>().createConstPrefab(pFactory);
     }
 
 

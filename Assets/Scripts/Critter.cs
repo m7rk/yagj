@@ -15,7 +15,7 @@ public class Critter : MonoBehaviour
     public GTYPE collectType;
 
 
-    private float CAT_SCALE = 0.4f;
+    private float CAT_SCALE = 0.9f;
 
     public GameObject collectedItem;
     public GameState.GramType pickedUp;
@@ -70,7 +70,18 @@ public class Critter : MonoBehaviour
             if (Vector2.Distance(v.transform.position,this.transform.position) < 1f)
             {
                 // static gamestate..........
-                FindObjectOfType<GameState>().p1.incr(pickedUp);
+
+                if (name[0] == FindObjectOfType<PlayerController>().name[0])
+                {
+                    FindObjectOfType<GameState>().p1.incr(true,pickedUp);
+                } else
+                {
+                    FindObjectOfType<GameState>().p2.incr(false,pickedUp);
+
+                }
+
+                // enemy cheats right now LOL
+
                 Destroy(collectedItem);
                 collectedItem = null;
                 return;

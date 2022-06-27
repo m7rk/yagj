@@ -23,7 +23,13 @@ public class Pickupable : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Destroy(this.gameObject);
-        gs.p1.incr(gt);
-
+        if (collision.name == "Antag")
+        {
+            gs.p2.incr(false,gt);
+        }
+        else
+        {
+            gs.p1.incr(true,gt);
+        }
     }
 }

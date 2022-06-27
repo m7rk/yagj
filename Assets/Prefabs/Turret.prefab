@@ -603,7 +603,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pivot: {fileID: 8012747191693061073}
-  projectile: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
+  projectileR: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
+  projectileB: {fileID: 7220730281039596975, guid: 843dff0ab6a670b4487a34473d98f3a9, type: 3}
   coolDown: 0
   turretRange: 10
 --- !u!61 &7658603889151303118

@@ -6,7 +6,8 @@ public class Turret : MonoBehaviour
 {
     public GameObject pivot;
 
-    public GameObject projectile;
+    public GameObject projectileR;
+    public GameObject projectileB;
 
     public float coolDown = 0f;
 
@@ -27,6 +28,7 @@ public class Turret : MonoBehaviour
             if (go != null)
             {
                 pivot.transform.right = go.transform.position - pivot.transform.position;
+                var projectile = name[0] == 'R' ? projectileR : projectileB;
                 var v = Instantiate(projectile);
                 v.GetComponent<Projectile>().vel = pivot.transform.right;
                 v.transform.position = pivot.transform.position;
