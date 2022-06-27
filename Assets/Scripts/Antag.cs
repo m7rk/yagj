@@ -23,15 +23,22 @@ public class Antag : MonoBehaviour
 
     private int[] findCoordNearby(int start_x, int start_y)
     {
+        var opts = new List<int[]>();
         for (int dx = -4; dx != 5; dx++)
         {
             for (int dy = -4; dy != 5; dy++)
             {
                 if(GameState.worldState[start_x+dx,start_y+dy] == GameState.TerrainType.GRASS)
                 {
-                    return new int[] { start_x + dx, start_y + dy };
+                    opts.Add(new int[] { start_x + dx, start_y + dy });
                 }
             }
+        }
+
+        if (opts.Count > 0)
+        {
+            var random = new System.Random().Next(opts.Count);
+            return opts[random];
         }
         return null;
     }

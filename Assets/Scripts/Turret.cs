@@ -11,7 +11,7 @@ public class Turret : MonoBehaviour
 
     public float coolDown = 0f;
 
-    public float turretRange = 10f;
+    private float turretRange = 4f;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,15 +39,14 @@ public class Turret : MonoBehaviour
         }
     }
 
-    public GameObject acquireTarget()
+    public GameObject attackCritter()
     {
         GameObject closest = null;
         float bestDist = 100000000;
-
-        foreach(var v in FindObjectsOfType<Critter>())
+        foreach (var v in FindObjectsOfType<Critter>())
         {
             var dist = Vector2.Distance(this.transform.position, v.transform.position);
-            if(v.name[0] != name[0] && dist < bestDist)
+            if (v.name[0] != name[0] && dist < bestDist)
             {
                 closest = v.gameObject;
                 bestDist = dist;
@@ -57,6 +56,70 @@ public class Turret : MonoBehaviour
         {
             return closest;
         }
+        return null;
+    }
+
+    public GameObject attackBuilding()
+    {
+        GameObject closest = null;
+        float bestDist = 100000000;
+        foreach (var v in GameObject.FindGameObjectsWithTag("Building"))
+        {
+            var dist = Vector2.Distance(this.transform.position, v.transform.position);
+            if (v.name[0] != name[0] && dist < bestDist)
+            {
+                closest = v.gameObject;
+                bestDist = dist;
+            }
+        }
+        if (bestDist < turretRange)
+        {
+            return closest;
+        }
+        return null;
+    }
+
+    public GameObject attackPlayer()
+    {
+        if(!FindObjectOfType<PlayerController>())
+        {
+            return null;
+        }
+        GameObject player = FindObjectOfType<PlayerController>().gameObject;
+        GameObject antag = FindObjectOfType<Antag>().gameObject;
+
+        if(Vector2.Distance(player.transform.position,this.transform.position) < turretRange && player.GetComponent<PlayerController>().team != name[0])
+        {
+            return player;
+        }
+
+        if (Vector2.Distance(antag.transform.position, this.transform.position) < turretRange && antag.GetComponent<Antag>().team != name[0])
+        {
+            return antag;
+        }
+
+        return null;
+    }
+
+
+    public GameObject acquireTarget()
+    {
+        if(attackCritter() != null)
+        {
+            return attackCritter();
+        }
+
+        if (attackPlayer() != null)
+        {
+            return attackPlayer();
+        }
+
+        if (attackBuilding() != null)
+        {
+            return attackBuilding();
+        }
+
+
         return null;
     }
 }

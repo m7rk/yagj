@@ -15,6 +15,7 @@ TagManager:
   - COMPLETE
   - Pickupable
   - Building
+  - Resource
   layers:
   - Default
   - TransparentFX
