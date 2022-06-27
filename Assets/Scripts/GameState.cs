@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
+
+    public static int MISSION_SEL;
     public class GramCollection
     {
         public int LT = 5;
@@ -114,8 +116,8 @@ public class GameState : MonoBehaviour
         gm = FindObjectOfType<GridManager>();
         hm = FindObjectOfType<StructureManager>();
 
-        int DIMX = 150;
-        int DIMY = 100;
+        int DIMX = 100;
+        int DIMY = 75;
 
         var seed = UnityEngine.Random.Range(0f, 100f);
         worldState = new TerrainType[DIMX, DIMY];

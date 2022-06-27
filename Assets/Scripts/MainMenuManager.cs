@@ -10,16 +10,8 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mainMenuPanel;
     [SerializeField]
     private GameObject missionSelectPanel;
-    [SerializeField]
-    private GameObject factionSelectPanel;
 
-    [SerializeField]
-    private bool isGGISelected;
-    [SerializeField]
-    private bool isBTangramSelected;
-
-    private int missionNumber;
-    private bool isPlayVsAI;
+    private bool missionLoaded;
 
     public Animator fadeAnimator;
     public float transitionTime = 1f;
@@ -28,37 +20,19 @@ public class MainMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isGGISelected = false;
-        isBTangramSelected = false;
-        isPlayVsAI = false;
+        missionLoaded = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isGGISelected || isBTangramSelected)
+        if (missionLoaded)
         {
-            if(!isPlayVsAI)
-            {
-                try
-                {
-                    StartCoroutine(PlayFadeAnimation());
+            StartCoroutine(PlayFadeAnimation());
 
-                    SceneManager.LoadScene("Mission" + missionNumber);
-                }
-                catch (Exception e)
-                {
-                    //condition if not loading map
-                }
-            }
-            else
-            {
-                StartCoroutine(PlayFadeAnimation());
-
-                SceneManager.LoadScene("Overworld");
-            }
-            
+            SceneManager.LoadScene("Overworld");
         }
+
         
     }
 
@@ -72,8 +46,9 @@ public class MainMenuManager : MonoBehaviour
     {
         // code to load the player vs AI scene
         // SceneManager.LoadScene("nameScene");
-        isPlayVsAI = true;
-        factionSelectPanel.SetActive(true);
+        missionLoaded = true;
+        GameState.MISSION_SEL = -1;
+        // (just load the game)
 
     }
 
@@ -85,19 +60,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void LoadSelectedMission(System.Int32 rec)
     {
-        missionNumber = rec;
-        factionSelectPanel.SetActive(true);
-        missionSelectPanel.SetActive(false);
-    }
-
-    public void GGISleected()
-    {
-        isGGISelected = true;
-    }
-
-    public void BTangramSelected()
-    {
-        isBTangramSelected = true;
+        GameState.MISSION_SEL = rec;
+        SceneManager.LoadScene("Overworld");
     }
 
     IEnumerator PlayFadeAnimation()

@@ -1886,8 +1886,8 @@ MonoBehaviour:
   NAME: {fileID: 12359153}
   DESC: {fileID: 370510118}
   buildBtn: {fileID: 1598784345}
-  rVic: {fileID: 0}
-  bVic: {fileID: 0}
+  rVic: {fileID: 735851385}
+  bVic: {fileID: 2094811238}
   ggTimer: -1
 --- !u!114 &393307898
 MonoBehaviour:
