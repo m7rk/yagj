@@ -112,6 +112,8 @@ MonoBehaviour:
   WATER_PUSH_FORCE: 0.9
   animTimeout: 0
   collectType: 1
+  collectedItem: {fileID: 0}
+  pickedUp: 0
 --- !u!61 &7968647779566896436
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -146,7 +148,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7968647779566896426}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

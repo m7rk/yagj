@@ -11,7 +11,7 @@ public class Turret : MonoBehaviour
 
     public float coolDown = 0f;
 
-    private float turretRange = 4f;
+    private float turretRange = 5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +27,15 @@ public class Turret : MonoBehaviour
             var go = acquireTarget();
             if (go != null)
             {
-                pivot.transform.right = go.transform.position - pivot.transform.position;
+                Vector3 targ = go.transform.position;
+
+                if(go.transform.tag == "Building")
+                {
+                    // want middle of building
+                    targ = new Vector3((0.6f * (int)(targ.x / 0.6f)) + 0.3f, (0.6f*(int)(targ.y / 0.6f)) + 0.3f, targ.z);   
+                }
+
+                pivot.transform.right = targ - pivot.transform.position;
                 var projectile = name[0] == 'R' ? projectileR : projectileB;
                 var v = Instantiate(projectile);
                 v.GetComponent<Projectile>().vel = 4 * pivot.transform.right;

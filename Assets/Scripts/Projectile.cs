@@ -32,11 +32,23 @@ public class Projectile : MonoBehaviour
         {
             if (collision.GetComponent<Critter>())
             {
+                if (Vector2.Distance(collision.transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+                {
+                    AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("creatureKill"), this.transform.position);
+                }
                 Destroy(collision.gameObject);
             }
             if (collision.gameObject.tag == "Building")
             {
-                FindObjectOfType<StructureManager>().attack((int)(collision.gameObject.transform.position.x / 0.6f), (int)(collision.gameObject.transform.position.y / 0.6f));
+                if (Vector2.Distance(collision.transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+                {
+                    AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("buildingKill"), this.transform.position);
+                }
+                // fucking rounding errors.
+                int x = (int)((0.1f + collision.gameObject.transform.position.x) / 0.6f);
+                int y = (int)((0.1f +collision.gameObject.transform.position.y) / 0.6f);
+
+                FindObjectOfType<StructureManager>().attack(x, y);
             }
             Destroy(this.gameObject);
         }

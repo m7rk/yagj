@@ -517,6 +517,7 @@ GameObject:
   - component: {fileID: 8012747192587238599}
   - component: {fileID: 6200787423707469334}
   - component: {fileID: 7658603889151303118}
+  - component: {fileID: 4353349595385878600}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Building
@@ -574,7 +575,6 @@ MonoBehaviour:
   projectileR: {fileID: 7220730281039596975, guid: db27581314bd6be4494f3245d4098ed2, type: 3}
   projectileB: {fileID: 7220730281039596975, guid: 843dff0ab6a670b4487a34473d98f3a9, type: 3}
   coolDown: 0
-  turretRange: 6
 --- !u!61 &7658603889151303118
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -601,6 +601,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5690699, y: 1.5298241}
   m_EdgeRadius: 0
+--- !u!50 &4353349595385878600
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8012747192587238601}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8012747193237129363
 GameObject:
   m_ObjectHideFlags: 0

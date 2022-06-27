@@ -30,6 +30,7 @@ public class Pickupable : MonoBehaviour
         else
         {
             gs.p1.incr(true,gt);
+            FindObjectOfType<PlayerController>().GetComponent<AudioSource>().Play();
         }
     }
 }

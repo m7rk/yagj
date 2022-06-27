@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
         constructionPrefab.transform.SetParent(null);
         constructionPrefab.name = b.name;
         constructionPrefab.GetComponent<BoxCollider2D>().enabled = false;
+
+        MonoBehaviour[] scripts = constructionPrefab.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts)
+        {
+            script.enabled = false;
+        }
     }
 
     public void changeToRed()
@@ -41,7 +47,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        /**
         if(Input.GetKey(KeyCode.P))
         {
             Time.timeScale = 5f;
@@ -49,6 +55,7 @@ public class PlayerController : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
+        */
 
 
         if (animTimeout > 0)

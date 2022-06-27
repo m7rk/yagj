@@ -110,6 +110,8 @@ MonoBehaviour:
   WATER_PUSH_FORCE: 0.9
   animTimeout: 0
   collectType: 2
+  collectedItem: {fileID: 0}
+  pickedUp: 0
 --- !u!61 &2946645314005896775
 BoxCollider2D:
   m_ObjectHideFlags: 0

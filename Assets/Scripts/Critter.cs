@@ -71,7 +71,7 @@ public class Critter : MonoBehaviour
             {
                 // static gamestate..........
 
-                if (name[0] == FindObjectOfType<PlayerController>().name[0])
+                if (name[0] == FindObjectOfType<PlayerController>().team)
                 {
                     FindObjectOfType<GameState>().p1.incr(true,pickedUp);
                 } else

@@ -17,7 +17,7 @@ public class PGramFactory : MonoBehaviour
         timer -= Time.deltaTime;
         if(timer < 0)
         {
-            FindObjectOfType<GameState>().addPickupable("p", this.transform.position + new Vector3(Random.Range(0.4f, 0.7f), Random.Range(0.4f, 0.7f), 0f));
+            FindObjectOfType<GameState>().addPickupable("p", this.transform.position + new Vector3(Random.Range(0.2f, 0.4f), Random.Range(-0.7f, -0.4f), 0f));
             timer = 20f;
         }
     }

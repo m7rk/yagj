@@ -95,6 +95,8 @@ public class UIManager : MonoBehaviour
 
     public void stepCompleted()
     {
+
+        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("click"), FindObjectOfType<PlayerController>().transform.position);
         completionSteps++;
         if(completionSteps == loadedRecipe.transform.childCount)
         {
@@ -184,14 +186,14 @@ public class UIManager : MonoBehaviour
     {
         book.SetActive(true);
         FindObjectOfType<PlayerController>().inMenu = true;
-        GetComponent<AudioSource>().PlayOneShot(bookOpen);
+        GetComponent<AudioSource>().PlayOneShot(bookOpen,0.7f);
     }
 
     public void closeBook()
     {
         book.SetActive(false);
         FindObjectOfType<PlayerController>().inMenu = false;
-        GetComponent<AudioSource>().PlayOneShot(bookClose);
+        GetComponent<AudioSource>().PlayOneShot(bookClose, 0.5f);
     }
 
     public void loadRecipe(System.Int32 rec)

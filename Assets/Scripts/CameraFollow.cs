@@ -25,7 +25,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (sidePicked)
         {
-            this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -100);
+            this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -30);
         }
     }
 

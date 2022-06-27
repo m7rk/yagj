@@ -192,6 +192,8 @@ MonoBehaviour:
   WATER_PUSH_FORCE: 0.9
   animTimeout: 0
   collectType: 0
+  collectedItem: {fileID: 0}
+  pickedUp: 0
 --- !u!61 &3206213593263515838
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -251,6 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d43e46241973652469ed11f2df9e5363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: 0
 --- !u!1 &3206213593563651229
 GameObject:
   m_ObjectHideFlags: 0

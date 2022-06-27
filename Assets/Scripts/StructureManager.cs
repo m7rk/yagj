@@ -139,8 +139,25 @@ public class StructureManager : MonoBehaviour
             return;
         }
 
+        // harvest this! it is a tree!
+        if (res[new Tuple<int, int>(x, y)].name == "tree")
+        {
+            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+            {
+                AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("wood"), res[new Tuple<int, int>(x, y)].transform.position);
+            }
+        }
+
+        if (res[new Tuple<int, int>(x, y)].name == "rock")
+        {
+            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+            {
+                AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("mine"), res[new Tuple<int, int>(x, y)].transform.position);
+            }
+        }
+
         // for each child
-        for(int i = 0; i != res[new Tuple<int, int>(x, y)].transform.childCount; ++i)
+        for (int i = 0; i != res[new Tuple<int, int>(x, y)].transform.childCount; ++i)
         {
             var harvested = res[new Tuple<int, int>(x, y)].transform.GetChild(i);
             var sname = harvested.GetComponent<SpriteRenderer>().sprite.name;
@@ -151,6 +168,7 @@ public class StructureManager : MonoBehaviour
                 // harvest this! it is a tree!
                 if (res[new Tuple<int, int>(x, y)].name == "tree" || res[new Tuple<int, int>(x, y)].name == "rock")
                 {
+
                     FindObjectOfType<GameState>().addPickupable(harvested.name.Replace("C", ""), new Vector2(x * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f), y * 0.6f + UnityEngine.Random.Range(0.2f, 0.4f)));
                     Destroy(harvested.gameObject);
                     return;
