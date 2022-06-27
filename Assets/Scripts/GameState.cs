@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -104,22 +105,27 @@ public class GameState : MonoBehaviour
     public GramCollection p2 = new GramCollection();
 
 
-    // Start is called before the first frame update
+    // World Generation
     void Start()
     {
         gm = FindObjectOfType<GridManager>();
         hm = FindObjectOfType<StructureManager>();
-        var seed = Random.Range(0f, 100f);
-        naturalWorldState = new TerrainType[200, 150];
 
-        // first pass, generate the basic outline of the world.
+        int DIMX = 150;
+        int DIMY = 100;
+
+        var seed = UnityEngine.Random.Range(0f, 100f);
+        naturalWorldState = new TerrainType[DIMX, DIMY];
+
+        // first pass, generate the basic rough outline of the world.
         for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
         {
             for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
             {
-                var basePerlin = Mathf.Max(0.2f, Mathf.PerlinNoise((seed + x) / 5f, (seed + y) / 5f));
-                var yFalloff = Mathf.Abs(y - (naturalWorldState.GetLength(1) / 2)) / (0.5 * (float)naturalWorldState.GetLength(1));
-                var xFalloff = Mathf.Abs(x - (naturalWorldState.GetLength(0) / 2)) / (0.5 * (float)naturalWorldState.GetLength(0));
+                var basePerlin = Mathf.Max(0.4f, Mathf.PerlinNoise((seed + x) / 5f, (seed + y) / 5f));
+                var yFalloff = 2f * (Mathf.Abs(y - (naturalWorldState.GetLength(1) / 2)) / (float)naturalWorldState.GetLength(1));
+                var xFalloff = 2f * (Mathf.Abs(x - (naturalWorldState.GetLength(0) / 2)) / (float)naturalWorldState.GetLength(0));
+
                 bool land = (basePerlin + -xFalloff + -yFalloff) > 0;
 
                 if (land)
@@ -127,14 +133,14 @@ public class GameState : MonoBehaviour
                     naturalWorldState[x, y] = TerrainType.GRASS;
 
                     // high freq noise for rocks, trees.
-                    var resPerlin = Mathf.PerlinNoise(((seed*2) + x) / 2f, ((seed*4) + y) / 2f);
+                    var resPerlin = Mathf.PerlinNoise(((seed*2) + x) / 4f, ((seed*4) + y) / 4f);
 
-                    if (resPerlin < 0.2f)
+                    if (resPerlin < 0.25f)
                     {
                         naturalWorldState[x, y] = TerrainType.TREES;
                     }
 
-                    if (resPerlin > 0.8f)
+                    if (resPerlin > 0.75f)
                     {
                         naturalWorldState[x, y] = TerrainType.ROCKS;
                     }
@@ -146,7 +152,43 @@ public class GameState : MonoBehaviour
             }
         }
 
-        // secondly, we need to place the bases on opposide sides of map, so the player can choose. 
+        // find only mainland tiles (no random islands)
+        HashSet<Tuple<int, int>> found = new HashSet<Tuple<int, int>>();
+        Queue<Tuple<int, int>> mainLand = new Queue<Tuple<int, int>>();
+        mainLand.Enqueue(new Tuple<int, int>(DIMX / 2, DIMY / 2));
+        while(mainLand.Count > 0)
+        {
+            var v = mainLand.Dequeue();
+
+            var adj = CrapBFS.fadj();
+            foreach(var a in adj)
+            {
+                var cons = new Tuple<int, int>(a.Item1 + v.Item1, a.Item2 + v.Item2);
+
+                if (!found.Contains(cons))
+                {
+                    if(naturalWorldState[cons.Item1,cons.Item2] != TerrainType.WATER)
+                    {
+                        found.Add(cons);
+                        mainLand.Enqueue(cons);
+                    }
+                }
+            }
+        }
+
+        // remove everything not on the mainland.
+        for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
+        {
+            for (var y = 0; y != naturalWorldState.GetLength(1); ++y)
+            {
+                if (!found.Contains(new Tuple<int, int>(x, y)))
+                {
+                    naturalWorldState[x, y] = TerrainType.WATER;
+                }
+            }
+        }
+
+        // Now place bases on the map.
         int[] first = null;
         int[] second = null;
         for (var x = 0; x != naturalWorldState.GetLength(0); ++x)
@@ -203,6 +245,8 @@ public class GameState : MonoBehaviour
 
         FindObjectOfType<StructureManager>().putBase(first[0], first[1], 'R');
         FindObjectOfType<StructureManager>().putBase(second[0], second[1], 'B');
+
+        player.transform.localPosition = new Vector3(first[0] * 0.6f, first[1] * 0.6f, this.transform.localPosition.z);
     }
 
     static public int[,] getTerrainAdapter()
@@ -230,26 +274,30 @@ public class GameState : MonoBehaviour
         return terrainAdapter;
     }
 
+    public Vector3 randOffset()
+    {
+        return new Vector3(UnityEngine.Random.Range(-0.01f, 0.01f), UnityEngine.Random.Range(-0.01f, 0.01f),0);
+    }
 
     public void spawnBeaver()
     {
         var v = Instantiate(beaver);
         v.transform.SetParent(NPCParent.transform);
-        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
+        v.transform.position = player.transform.position + randOffset();
     }
 
     public void spawnGolem()
     {
         var v = Instantiate(golem);
         v.transform.SetParent(NPCParent.transform);
-        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
+        v.transform.position = player.transform.position + randOffset();
     }
 
     public void spawnCaterpillar()
     {
         var v = Instantiate(caterpillar);
         v.transform.SetParent(NPCParent.transform);
-        v.transform.position = player.transform.position + new Vector3(Random.Range(-0.01f, 0.01f), Random.Range(-0.01f, 0.01f), 0);
+        v.transform.position = player.transform.position + randOffset();
     }
 
     public void spawnTurret()
