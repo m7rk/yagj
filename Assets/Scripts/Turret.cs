@@ -89,14 +89,14 @@ public class Turret : MonoBehaviour
 
     public GameObject attackPlayer()
     {
-        if(!FindObjectOfType<PlayerController>())
+        if(!FindObjectOfType<Player>())
         {
             return null;
         }
-        GameObject player = FindObjectOfType<PlayerController>().gameObject;
+        GameObject player = FindObjectOfType<Player>().gameObject;
         GameObject antag = FindObjectOfType<Antag>().gameObject;
 
-        if(Vector2.Distance(player.transform.position,this.transform.position) < turretRange && player.GetComponent<PlayerController>().team != name[0])
+        if(Vector2.Distance(player.transform.position,this.transform.position) < turretRange && player.GetComponent<Player>().team != name[0])
         {
             return player;
         }

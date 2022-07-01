@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Critter : MonoBehaviour
+public class Critter : Entity
 {
 
     public float GATHERER_PUSH_FORCE = 0.2f;
@@ -18,7 +18,7 @@ public class Critter : MonoBehaviour
     private float CAT_SCALE = 0.9f;
 
     public GameObject collectedItem;
-    public GameState.GramType pickedUp;
+    public Player.GramType pickedUp;
 
     public void Start()
     {
@@ -71,7 +71,7 @@ public class Critter : MonoBehaviour
             {
                 // static gamestate..........
 
-                if (name[0] == FindObjectOfType<PlayerController>().team)
+                if (name[0] == FindObjectOfType<Player>().team)
                 {
                     FindObjectOfType<GameState>().p1.incr(true,pickedUp);
                 } else

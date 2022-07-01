@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// don't use this.
+/**
 public class Antag : MonoBehaviour
 {
     public Sprite redAlt;
@@ -28,7 +30,7 @@ public class Antag : MonoBehaviour
         {
             for (int dy = -4; dy != 5; dy++)
             {
-                if(GameState.worldState[start_x+dx,start_y+dy] == GameState.TerrainType.GRASS)
+                if(GameState.gs[start_x+dx,start_y+dy] == GameState.TerrainType.GRASS)
                 {
                     opts.Add(new int[] { start_x + dx, start_y + dy });
                 }
@@ -117,7 +119,7 @@ public class Antag : MonoBehaviour
             int[] numberOfPieces = new int[] { 2, 2, 0, 0, 0 };
             int[] numberOfBuilds = new int[] { 0, 0, 0, 0, 0, 1, 0, 0 };
             List<int> osg = (new CostAnalysis.TurrentCostAnalysis()).Ordering_ExpensiveGreedy(numberOfPieces, numberOfBuilds);
-            */
+   
             
         }
 
@@ -128,6 +130,5 @@ public class Antag : MonoBehaviour
         GetComponent<Animator>().SetBool("Walking",true);
 
     }
-
-
 }
+*/

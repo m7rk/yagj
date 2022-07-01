@@ -31,8 +31,17 @@ public class StructureManager : MonoBehaviour
     {
         
     }
-    public static void paint(GameObject obj, Color col)
+    public static void paint(GameObject obj, int teamID)
     {
+        Color col = Color.white;
+        switch(teamID)
+        {
+            case 1: col = Color.red; break;
+            case 2: col = Color.blue; break;
+            case 3: col = Color.green; break;
+            case 4: col = Color.yellow; break;
+        }
+
         foreach (Transform child in obj.transform)
         {
             if (child.GetComponent<SpriteRenderer>())
@@ -75,46 +84,38 @@ public class StructureManager : MonoBehaviour
         res[new Tuple<int, int>(x, y)] = t;
     }
     // puts.
-    public void putBase(int x, int y, char TID)
+    public void putBase(int x, int y, int TID)
     {
         var t = Instantiate(rbase);
         put(t, x, y);
-        paint(t, (TID == 'R' ? Color.red : Color.blue));
-        t.name = TID + "base";
+        paint(t, TID);
         // base is only big turret (this is okay!!)
         res[new Tuple<int, int>(x+1, y)] = t;
         res[new Tuple<int, int>(x, y+1)] = t;
         res[new Tuple<int, int>(x+1, y+1)] = t;
 
     }
-    public void putShed(int x, int y, char TID)
+    public void putShed(int x, int y, int TID)
     {
         var t = Instantiate(shed);
-        // FUCK offset i forgout about
         put(t, x, y);
-        paint(t, (TID == 'R' ? Color.red : Color.blue));
-        t.name = TID + "shed";
-        // fucking hell, jsut make everythign static, dont need these finds()
-        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
+        paint(t, TID);
+        GameState.gs.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
 
-    public void putTurret(int x, int y, char TID)
+    public void putTurret(int x, int y, int TID)
     {
         var t = Instantiate(turret);
         put(t, x, y);
-        paint(t, (TID == 'R' ? Color.red : Color.blue));
-        t.name = TID + "tur";
-        // fucking hell, jsut make everythign static, dont need these finds()
-        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
+        paint(t, TID);
+        GameState.gs.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
-    public void putPFact(int x, int y, char TID)
+    public void putPFact(int x, int y, int TID)
     {
         var t = Instantiate(pFactory);
         put(t, x, y);
-        paint(t, (TID == 'R' ? Color.red : Color.blue));
-        t.name = TID + "pfct";
-        // fucking hell, jsut make everythign static, dont need these finds()
-        GameState.worldState[x, y] = GameState.TerrainType.STRUCTURE;
+        paint(t, TID);
+        GameState.gs.worldState[x, y] = GameState.TerrainType.STRUCTURE;
     }
 
     public string objAt(int x, int y)
@@ -142,7 +143,7 @@ public class StructureManager : MonoBehaviour
         // harvest this! it is a tree!
         if (res[new Tuple<int, int>(x, y)].name == "tree")
         {
-            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<Player>().transform.position) < 10)
             {
                 AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("wood"), res[new Tuple<int, int>(x, y)].transform.position);
             }
@@ -150,7 +151,7 @@ public class StructureManager : MonoBehaviour
 
         if (res[new Tuple<int, int>(x, y)].name == "rock")
         {
-            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+            if (Vector2.Distance(res[new Tuple<int, int>(x, y)].transform.position, FindObjectOfType<Player>().transform.position) < 10)
             {
                 AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("mine"), res[new Tuple<int, int>(x, y)].transform.position);
             }

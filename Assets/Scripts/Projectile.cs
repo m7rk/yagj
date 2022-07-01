@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
         {
             if (collision.GetComponent<Critter>())
             {
-                if (Vector2.Distance(collision.transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+                if (Vector2.Distance(collision.transform.position, FindObjectOfType<Player>().transform.position) < 10)
                 {
                     AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("creatureKill"), this.transform.position);
                 }
@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
             }
             if (collision.gameObject.tag == "Building")
             {
-                if (Vector2.Distance(collision.transform.position, FindObjectOfType<PlayerController>().transform.position) < 10)
+                if (Vector2.Distance(collision.transform.position, FindObjectOfType<Player>().transform.position) < 10)
                 {
                     AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("buildingKill"), this.transform.position);
                 }
@@ -53,9 +53,9 @@ public class Projectile : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        if (collision.gameObject.tag == "Player" && collision.GetComponent<PlayerController>() && collision.GetComponent<PlayerController>().team != name[0])
+        if (collision.gameObject.tag == "Player" && collision.GetComponent<Player>() && collision.GetComponent<Player>().team != name[0])
         {
-            FindObjectOfType<GameState>().putAtBase(collision.gameObject, collision.GetComponent<PlayerController>().team == 'R');
+            FindObjectOfType<GameState>().putAtBase(collision.gameObject, collision.GetComponent<Player>().team == 'R');
         }
 
         if (collision.gameObject.tag == "Player" && collision.GetComponent<Antag>() && collision.GetComponent<Antag>().team != name[0])

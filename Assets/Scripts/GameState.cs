@@ -5,80 +5,20 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
+    // only one
+    public GameState gs;
 
+    // what mission to load?
     public static int MISSION_SEL;
-    public class GramCollection
-    {
-        public int LT = 0;
-        public int MT = 0;
-        public int ST = 2;
-        public int S = 2;
-        public int P = 0;
 
-        public void incr(bool player,GramType gramType)
-        {
-            if (player)
-            {
-                FindObjectOfType<UIManager>().setIncrFlash(gramType);
-            }
+    // what team is the player controller on?
+    public int playerTeam = 0;
 
-            switch (gramType)
-            {
-                case GameState.GramType.LT:
-                    LT += 1; break;
-                case GameState.GramType.MT:
-                    MT += 1; break;
-                case GameState.GramType.ST:
-                    ST += 1; break;
-                case GameState.GramType.P:
-                    P += 1; break;
-                case GameState.GramType.S:
-                    S += 1; break;
-            }
-        }
 
-        public void decr(string gramType)
-        {
-            switch (gramType)
-            {
-                case "lt":
-                    LT -= 1; break;
-                case "mt":
-                    MT -= 1; break;
-                case "st":
-                    ST -= 1; break;
-                case "p":
-                    P -= 1; break;
-                case "s":
-                    S -= 1; break;
-            }
-        }
-
-        public void incr(bool player,string gramType)
-        {
-            switch (gramType)
-            {
-                case "lt":
-                    incr(player,GramType.LT); break;
-                case "mt":
-                    incr(player, GramType.MT); break;
-                case "st":
-                    incr(player, GramType.ST); break;
-                case "p":
-                    incr(player, GramType.P); break;
-                case "s":
-                    incr(player, GramType.S); break;
-            }
-        }
-    }
-
-    public enum GramType { LT, MT, ST, S, P }
 
     // This seems super terrible. "Structure" gives no data
     // for now though it's a quick "pass or impass" filter
     public enum TerrainType { WATER, GRASS, ROCKS, TREES, STRUCTURE }
-
-
 
     public GameObject pickupParent;
 
@@ -91,7 +31,6 @@ public class GameState : MonoBehaviour
     public GameObject shed;
     public GameObject pFactory;
 
-
     public GameObject pkLT;
     public GameObject pkMT;
     public GameObject pkST;
@@ -100,17 +39,14 @@ public class GameState : MonoBehaviour
 
 
     // this is the rocks, water, trees, grass.
-    public static TerrainType[,] worldState;
+    public TerrainType[,] worldState;
 
     // etc
-    public static GridManager gm;
-    public static StructureManager hm;
+    public GridManager gm;
+    public StructureManager hm;
 
     public GameObject NPCParent;
     public GameObject BuildingParent;
-
-    public GramCollection p1 = new GramCollection();
-    public GramCollection p2 = new GramCollection();
 
     private int[] redSpawn = null;
     private int[] blueSpawn = null;
@@ -118,6 +54,7 @@ public class GameState : MonoBehaviour
     // World Generation
     void Start()
     {
+        GameState.gs = this;
         gm = FindObjectOfType<GridManager>();
         hm = FindObjectOfType<StructureManager>();
 
@@ -358,46 +295,43 @@ public class GameState : MonoBehaviour
         return new Vector3(UnityEngine.Random.Range(-0.01f, 0.01f), UnityEngine.Random.Range(-0.01f, 0.01f),0);
     }
 
-    public void spawnBeaver(GameObject player, char team)
+    public void spawnBeaver(GameObject player, int team)
     {
         var v = Instantiate(beaver);
-        StructureManager.paint(v.GetComponentInChildren<Animator>().gameObject, (team == 'R' ? Color.red : Color.blue));
+        StructureManager.paint(v.GetComponentInChildren<Animator>().gameObject, team);
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
-        v.name = (team.ToString() + "beaver");
     }
 
-    public void spawnGolem(GameObject player, char team)
+    public void spawnGolem(GameObject player, int team)
     {
         var v = Instantiate(golem);
-        StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
+        StructureManager.paint(v, team);
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
-        v.name = (team.ToString() + "golem");
     }
 
-    public void spawnCaterpillar(GameObject player, char team)
+    public void spawnCaterpillar(GameObject player, int team)
     {
         var v = Instantiate(caterpillar);
-        StructureManager.paint(v, (team == 'R' ? Color.red : Color.blue));
+        StructureManager.paint(v, team);
         v.transform.SetParent(NPCParent.transform);
         v.transform.position = player.transform.position + randOffset();
-        v.name = (team.ToString() + "caterpillar");
     }
 
     public void spawnTurret()
     {
-        FindObjectOfType<PlayerController>().GetComponent<PlayerController>().createConstPrefab(turret);
+        FindObjectOfType<Player>().GetComponent<Player>().createConstPrefab(turret);
     }
 
     public void spawnShed()
     {
-        FindObjectOfType<PlayerController>().createConstPrefab(shed);
+        FindObjectOfType<Player>().createConstPrefab(shed);
     }
 
     public void spawnPFactory()
     {
-        FindObjectOfType<PlayerController>().createConstPrefab(pFactory);
+        FindObjectOfType<Player>().createConstPrefab(pFactory);
     }
 
 

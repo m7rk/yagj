@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameState gs;
+    public Player controlledPlayer;
+
     public TMPro.TMP_Text LTTEXT;
     public TMPro.TMP_Text MTTEXT;
     public TMPro.TMP_Text STTEXT;
@@ -75,19 +77,19 @@ public class UIManager : MonoBehaviour
 
     private int completionSteps = 0;
 
-    public void setIncrFlash(GameState.GramType gramType)
+    public void setIncrFlash(Player.GramType gramType)
     {
         switch(gramType)
         {
-            case GameState.GramType.LT:
+            case Player.GramType.LT:
                 LTTEXT.color = Color.green; break;
-            case GameState.GramType.MT:
+            case Player.GramType.MT:
                 MTTEXT.color = Color.green; break;
-            case GameState.GramType.ST:
+            case Player.GramType.ST:
                 STTEXT.color = Color.green; break;
-            case GameState.GramType.S:
+            case Player.GramType.S:
                 STEXT.color = Color.green; break;
-            case GameState.GramType.P:
+            case Player.GramType.P:
                 PTEXT.color = Color.green; break;
         }
     }
@@ -96,7 +98,7 @@ public class UIManager : MonoBehaviour
     public void stepCompleted()
     {
 
-        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("click"), FindObjectOfType<PlayerController>().transform.position);
+        AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("click"), FindObjectOfType<Player>().transform.position);
         completionSteps++;
         if(completionSteps == loadedRecipe.transform.childCount)
         {
@@ -157,7 +159,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        LTTEXT.text = "" + gs.p1.LT;
+        LTTEXT.text = "" + controlledPlayer.LT;
         MTTEXT.text = "" + gs.p1.MT;
         STTEXT.text = "" + gs.p1.ST;
         STEXT.text = "" + gs.p1.S;
@@ -185,14 +187,14 @@ public class UIManager : MonoBehaviour
     public void openBook()
     {
         book.SetActive(true);
-        FindObjectOfType<PlayerController>().inMenu = true;
+        FindObjectOfType<Player>().inMenu = true;
         GetComponent<AudioSource>().PlayOneShot(bookOpen,0.7f);
     }
 
     public void closeBook()
     {
         book.SetActive(false);
-        FindObjectOfType<PlayerController>().inMenu = false;
+        FindObjectOfType<Player>().inMenu = false;
         GetComponent<AudioSource>().PlayOneShot(bookClose, 0.5f);
     }
 
@@ -227,9 +229,9 @@ public class UIManager : MonoBehaviour
         closeBook();
         switch(recIdxLoaded)
         {
-            case 0: gs.spawnBeaver(FindObjectOfType<PlayerController>().gameObject, FindObjectOfType<PlayerController>().team); return;
-            case 1: gs.spawnGolem(FindObjectOfType<PlayerController>().gameObject,FindObjectOfType<PlayerController>().team); return;
-            case 2: gs.spawnCaterpillar(FindObjectOfType<PlayerController>().gameObject,FindObjectOfType<PlayerController>().team); return;
+            case 0: gs.spawnBeaver(FindObjectOfType<Player>().gameObject, FindObjectOfType<Player>().team); return;
+            case 1: gs.spawnGolem(FindObjectOfType<Player>().gameObject,FindObjectOfType<Player>().team); return;
+            case 2: gs.spawnCaterpillar(FindObjectOfType<Player>().gameObject,FindObjectOfType<Player>().team); return;
             case 3: gs.spawnShed(); return;
             case 4: gs.spawnPFactory(); return;
             case 6: gs.spawnTurret(); return;

@@ -7,7 +7,7 @@ public class Pickupable : MonoBehaviour
     private const float ROT_SPEED = 90f;
 
     public GameState gs;
-    public GameState.GramType gt;
+    public Player.GramType gt;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +30,7 @@ public class Pickupable : MonoBehaviour
         else
         {
             gs.p1.incr(true,gt);
-            FindObjectOfType<PlayerController>().GetComponent<AudioSource>().Play();
+            FindObjectOfType<Player>().GetComponent<AudioSource>().Play();
         }
     }
 }
