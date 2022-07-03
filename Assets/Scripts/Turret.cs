@@ -89,6 +89,8 @@ public class Turret : MonoBehaviour
 
     public GameObject attackPlayer()
     {
+        // Later, iterate through players.
+        /**
         if(!FindObjectOfType<Player>())
         {
             return null;
@@ -105,6 +107,7 @@ public class Turret : MonoBehaviour
         {
             return antag;
         }
+        */
 
         return null;
     }

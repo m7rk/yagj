@@ -79,15 +79,18 @@ public class Player : Entity
 
     public GramCollection gc;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        inMenu = false;
-    }
 
     GameObject constructionPrefab = null;
 
     public float animTimeout = 0f;
+
+    // Start is called before the first frame update
+    public void Awake()
+    {
+        inMenu = false;
+        gc = new GramCollection();
+    }
+
 
 
     public void createConstPrefab(GameObject b)

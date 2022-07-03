@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameState : MonoBehaviour
 {
     // only one
-    public GameState gs;
+    public static GameState gs;
 
     // what mission to load?
     public static int MISSION_SEL;
@@ -14,7 +14,10 @@ public class GameState : MonoBehaviour
     // what team is the player controller on?
     public int playerTeam = 0;
 
+    // list o players
+    public List<Player> players;
 
+    public float GRID_SIZE = 0.6f;
 
     // This seems super terrible. "Structure" gives no data
     // for now though it's a quick "pass or impass" filter
@@ -23,6 +26,8 @@ public class GameState : MonoBehaviour
     public GameObject pickupParent;
 
     // instantiateables
+    public GameObject playerPrefab;
+
     public GameObject beaver;
     public GameObject golem;
     public GameObject caterpillar;
@@ -48,11 +53,14 @@ public class GameState : MonoBehaviour
     public GameObject NPCParent;
     public GameObject BuildingParent;
 
-    private int[] redSpawn = null;
-    private int[] blueSpawn = null;
+    private List<int[]> teamspawns;
 
+    public Player getControlledPlayer()
+    {
+        return GameState.gs.players[GameState.gs.playerTeam];
+    }
     // World Generation
-    void Start()
+    void Awake()
     {
         GameState.gs = this;
         gm = FindObjectOfType<GridManager>();
@@ -146,6 +154,9 @@ public class GameState : MonoBehaviour
 
         // Now place bases on the map.
 
+        // We use a "ray" algorithm where, for the number of players, we cast out rays 
+        /**
+
         for (var x = 0; x != worldState.GetLength(0); ++x)
         {
             for (var y = 0; y != worldState.GetLength(1); ++y)
@@ -179,6 +190,7 @@ public class GameState : MonoBehaviour
         worldState[blueSpawn[0] + 1, blueSpawn[1]] = TerrainType.GRASS;
         worldState[blueSpawn[0], blueSpawn[1] + 1] = TerrainType.GRASS;
         worldState[blueSpawn[0] + 1, blueSpawn[1] + 1] = TerrainType.GRASS;
+        */
 
         gm.Create(worldState);
 
@@ -197,25 +209,34 @@ public class GameState : MonoBehaviour
                 }
             }
         }
+        // inst. players
 
+        for(int i = 0; i != 4; i++)
+        {
+            var v = makePlayer();
+            players.Add(v.GetComponent<Player>());
+        }
+        /**
         FindObjectOfType<StructureManager>().putBase(redSpawn[0], redSpawn[1], 'R');
         FindObjectOfType<StructureManager>().putBase(blueSpawn[0], blueSpawn[1], 'B');
+        */
+
 
     }
 
-    public void putAtBase(GameObject p, bool red)
+    private GameObject makePlayer()
     {
-        if (red)
-        {
-            p.transform.localPosition = new Vector3(0.3f + redSpawn[0] * 0.6f, 0.3f + redSpawn[1] * 0.6f, this.transform.localPosition.z);
-        } else
-        {
-            p.transform.localPosition = new Vector3(0.3f + blueSpawn[0] * 0.6f, 0.3f + blueSpawn[1] * 0.6f, this.transform.localPosition.z);
-
-        }
+        var go = Instantiate(playerPrefab);
+        go.transform.SetParent(null);
+        return go;
     }
 
-    static public int[,] getCatPickUpAdapter(char team)
+    public void putAtBase(GameObject p, int team)
+    {
+        p.transform.localPosition = new Vector3(0.3f + teamspawns[team][0] * 0.6f, 0.3f + teamspawns[team][1] * 0.6f, this.transform.localPosition.z);
+    }
+
+    public int[,] getCatPickUpAdapter(int team)
     {
         var terrainAdapter = new int[200, 150];
         for (var x = 0; x != worldState.GetLength(0); ++x)
@@ -248,7 +269,7 @@ public class GameState : MonoBehaviour
         return terrainAdapter;
     }
 
-    static public int[,] getTerrainAdapter(char team)
+    public int[,] getTerrainAdapter(int team)
     {
         var terrainAdapter = new int[200, 150];
         for (var x = 0; x != worldState.GetLength(0); ++x)

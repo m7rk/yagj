@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameState gs;
-    public Player controlledPlayer;
+    private Player controlledPlayer;
 
     public TMPro.TMP_Text LTTEXT;
     public TMPro.TMP_Text MTTEXT;
@@ -66,6 +66,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        controlledPlayer = GameState.gs.getControlledPlayer();
         ltcol = LTTIM.color;
         mtcol = MTTIM.color;
         stcol = STTIM.color;
@@ -159,23 +160,23 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        LTTEXT.text = "" + controlledPlayer.LT;
-        MTTEXT.text = "" + gs.p1.MT;
-        STTEXT.text = "" + gs.p1.ST;
-        STEXT.text = "" + gs.p1.S;
-        PTEXT.text = "" + gs.p1.P;
+        LTTEXT.text = "" + controlledPlayer.gc.LT;
+        MTTEXT.text = "" + controlledPlayer.gc.MT;
+        STTEXT.text = "" + controlledPlayer.gc.ST;
+        STEXT.text = "" + controlledPlayer.gc.S;
+        PTEXT.text = "" + controlledPlayer.gc.P;
 
-        LTTEXT2.text = "X" + gs.p1.LT;
-        MTTEXT2.text = "X" + gs.p1.MT;
-        STTEXT2.text = "X" + gs.p1.ST;
-        STEXT2.text = "X" + gs.p1.S;
-        PTEXT2.text = "X" + gs.p1.P;
+        LTTEXT2.text = "X" + controlledPlayer.gc.LT;
+        MTTEXT2.text = "X" + controlledPlayer.gc.MT;
+        STTEXT2.text = "X" + controlledPlayer.gc.ST;
+        STEXT2.text = "X" + controlledPlayer.gc.S;
+        PTEXT2.text = "X" + controlledPlayer.gc.P;
 
-        LTTIM.color = gs.p1.LT == 0 ? Color.white : ltcol;
-        MTTIM.color = gs.p1.MT == 0 ? Color.white : mtcol;
-        STTIM.color=  gs.p1.ST == 0 ? Color.white : stcol;
-        STIM.color =  gs.p1.S == 0 ? Color.white : scol;
-        PTIM.color = gs.p1.P == 0 ? Color.white : pcol;
+        LTTIM.color = controlledPlayer.gc.LT == 0 ? Color.white : ltcol;
+        MTTIM.color = controlledPlayer.gc.MT == 0 ? Color.white : mtcol;
+        STTIM.color= controlledPlayer.gc.ST == 0 ? Color.white : stcol;
+        STIM.color = controlledPlayer.gc.S == 0 ? Color.white : scol;
+        PTIM.color = controlledPlayer.gc.P == 0 ? Color.white : pcol;
 
         STTEXT.color = Color.Lerp(STTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);
         MTTEXT.color = Color.Lerp(MTTEXT.color, Color.black, Time.deltaTime * COLOR_TRANS_TIME);

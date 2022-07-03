@@ -69,16 +69,8 @@ public class Critter : Entity
         {
             if (Vector2.Distance(v.transform.position,this.transform.position) < 1f)
             {
-                // static gamestate..........
+                GameState.gs.players[team].gc.incr(true,pickedUp);
 
-                if (name[0] == FindObjectOfType<Player>().team)
-                {
-                    FindObjectOfType<GameState>().p1.incr(true,pickedUp);
-                } else
-                {
-                    FindObjectOfType<GameState>().p2.incr(false,pickedUp);
-
-                }
 
                 // enemy cheats right now LOL
 
@@ -97,7 +89,7 @@ public class Critter : Entity
 
         if (collectedItem == null)
         {
-            var ta = GameState.getCatPickUpAdapter(name[0]);
+            var ta = GameState.gs.getCatPickUpAdapter(name[0]);
             var move = CrapBFS.find(start_x, start_y, 2, ta);
 
             if(move.Item1 == 0 && move.Item2 == 0)
@@ -111,7 +103,7 @@ public class Critter : Entity
         }
         else
         {
-            var ta = GameState.getTerrainAdapter(name[0]);
+            var ta = GameState.gs.getTerrainAdapter(name[0]);
             var move = CrapBFS.find(start_x, start_y, 3, ta);
             if (move.Item1 == 0 && move.Item2 == 0)
             {
@@ -136,19 +128,19 @@ public class Critter : Entity
             // check for a good harvest.
             if (animTimeout - Time.deltaTime <= 0)
             {
-                if (collectType == GTYPE.BEAV && GameState.hm.objAt(start_x, start_y) == "tree")
+                if (collectType == GTYPE.BEAV && GameState.gs.hm.objAt(start_x, start_y) == "tree")
                 {
-                    GameState.hm.attack(start_x, start_y);
+                    GameState.gs.hm.attack(start_x, start_y);
                 }
 
-                if (collectType == GTYPE.GOL && GameState.hm.objAt(start_x, start_y) == "rock")
+                if (collectType == GTYPE.GOL && GameState.gs.hm.objAt(start_x, start_y) == "rock")
                 {
-                    GameState.hm.attack(start_x, start_y);
+                    GameState.gs.hm.attack(start_x, start_y);
                 }
 
                 if (collectType == GTYPE.RAT)
                 {
-                    GameState.hm.attack(start_x, start_y);
+                    GameState.gs.hm.attack(start_x, start_y);
                 }
             }
 
@@ -171,7 +163,7 @@ public class Critter : Entity
 
         //this.transform.position += new Vector3(path[1][0] - path[0][0], path[1][1] - path[0][1]).normalized * Time.deltaTime;
 
-        if (GameState.worldState[start_x, start_y] == tres)
+        if (GameState.gs.worldState[start_x, start_y] == tres)
         {
             // tree cut down
             GetComponentInChildren<Animator>().SetTrigger("Gather");
@@ -187,7 +179,7 @@ public class Critter : Entity
             //var path = astar.pathTo(start_x, start_y, to_tile[0], to_tile[1], ta);
             */
 
-            var ta = GameState.getTerrainAdapter(name[0]);
+            var ta = GameState.gs.getTerrainAdapter(name[0]);
             var move = CrapBFS.find(start_x, start_y, sVal, ta);
             var posDelt = new Vector3(move.Item1, move.Item2, 0).normalized;
             this.transform.position += posDelt * Time.deltaTime;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : Entity
 {
     public Vector3 vel;
 
@@ -53,14 +53,9 @@ public class Projectile : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        if (collision.gameObject.tag == "Player" && collision.GetComponent<Player>() && collision.GetComponent<Player>().team != name[0])
+        if (collision.gameObject.tag == "Player" && collision.GetComponent<Player>() && collision.GetComponent<Player>().team != team)
         {
-            FindObjectOfType<GameState>().putAtBase(collision.gameObject, collision.GetComponent<Player>().team == 'R');
-        }
-
-        if (collision.gameObject.tag == "Player" && collision.GetComponent<Antag>() && collision.GetComponent<Antag>().team != name[0])
-        {
-            FindObjectOfType<GameState>().putAtBase(collision.gameObject, collision.GetComponent<Antag>().team == 'R');
+            FindObjectOfType<GameState>().putAtBase(collision.gameObject, collision.GetComponent<Player>().team);
         }
     }
 }

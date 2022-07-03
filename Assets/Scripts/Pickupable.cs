@@ -23,14 +23,8 @@ public class Pickupable : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Destroy(this.gameObject);
-        if (collision.name == "Antag")
-        {
-            gs.p2.incr(false,gt);
-        }
-        else
-        {
-            gs.p1.incr(true,gt);
-            FindObjectOfType<Player>().GetComponent<AudioSource>().Play();
-        }
+        GameState.gs.players[collision.GetComponent<Player>().team].gc.incr(collision.GetComponent<Player>().team == GameState.gs.playerTeam,gt);
+        FindObjectOfType<Player>().GetComponent<AudioSource>().Play();
+
     }
 }

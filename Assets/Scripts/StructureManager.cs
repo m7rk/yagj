@@ -220,7 +220,7 @@ public class StructureManager : MonoBehaviour
         }
 
         res.Remove(new Tuple<int, int>(x, y));
-        GameState.worldState[x, y] = GameState.TerrainType.GRASS;
+        GameState.gs.worldState[x, y] = GameState.TerrainType.GRASS;
 
         
 

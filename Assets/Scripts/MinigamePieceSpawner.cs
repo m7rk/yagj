@@ -12,7 +12,6 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
     private GameObject currPiece;
     private List<GameObject> spawnedPieces;
     public UIManager um;
-    public GameState gs;
 
     public void Awake()
     {
@@ -33,7 +32,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
             currPiece = Instantiate(spawnable);
             currPiece.transform.SetParent(this.transform.parent);
             currPiece.GetComponent<RectTransform>().transform.position = this.GetComponent<RectTransform>().transform.position;
-            gs.p1.decr(currPiece.tag);
+            GameState.gs.getControlledPlayer().gc.decr(currPiece.tag);
         }
     }
 
@@ -41,7 +40,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
     {
         foreach(var v in spawnedPieces)
         {
-            gs.p1.incr(true,v.tag);
+            GameState.gs.getControlledPlayer().gc.incr(true,v.tag);
             Destroy(v);
         }
         spawnedPieces = new List<GameObject>();
@@ -68,7 +67,7 @@ public class MinigamePieceSpawner : MonoBehaviour, IPointerDownHandler
             }
             else
             {
-                gs.p1.incr(true,currPiece.tag);
+                GameState.gs.getControlledPlayer().gc.incr(true,currPiece.tag);
             }
             currPiece = null;
         }
