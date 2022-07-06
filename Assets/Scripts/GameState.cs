@@ -152,45 +152,46 @@ public class GameState : MonoBehaviour
             }
         }
 
-        // Now place bases on the map.
+        teamspawns = new List<int[]>();
+        // inst. players
+        for (int i = 0; i != 4; i++)
+        {
+            var v = makePlayer();
+            players.Add(v.GetComponent<Player>());
+            // assert not null
+            teamspawns.Add(null);
+        }
+
 
         // We use a "ray" algorithm where, for the number of players, we cast out rays 
-        /**
-
-        for (var x = 0; x != worldState.GetLength(0); ++x)
+        for (int i = 0; i != players.Count; ++i)
         {
-            for (var y = 0; y != worldState.GetLength(1); ++y)
-            {
-                if(redSpawn == null && worldState[x,y] != TerrainType.WATER)
-                {
-                    // candidate
-                    if(worldState[x+1,y] != TerrainType.WATER && worldState[x+1,y+1] != TerrainType.WATER && worldState[x,y+1] == TerrainType.WATER)
-                    {
-                        redSpawn = new int[2] { x, y };
-                    }
-                }
+            int x = DIMX/2;
+            int y = DIMY/2;
+            float angle = (i * 360f) / players.Count;
 
-                if (worldState[x, y] != TerrainType.WATER)
+            for(int d = 0; d != DIMY/2; ++d)
+            {
+                int tx = x + (int)(d * Mathf.Cos(angle * Mathf.Deg2Rad));
+                int ty = y + (int)(d * Mathf.Sin(angle * Mathf.Deg2Rad));
+
+                if (worldState[tx, ty] != TerrainType.WATER)
                 {
                     // candidate
-                    if (worldState[x + 1, y] != TerrainType.WATER && worldState[x + 1, y + 1] != TerrainType.WATER && worldState[x, y + 1] == TerrainType.WATER)
+                    if (worldState[tx + 1, ty] != TerrainType.WATER && worldState[tx + 1, ty + 1] != TerrainType.WATER && worldState[tx, ty + 1] != TerrainType.WATER)
                     {
-                        blueSpawn = new int[2] { x, y };
+                        teamspawns[i] = new int[2] { tx, ty };
                     }
                 }
             }
+
+            putAtBase(players[i].gameObject, i); 
+            worldState[teamspawns[i][0], teamspawns[i][1]] = TerrainType.GRASS;
+            worldState[teamspawns[i][0], teamspawns[i][1]] = TerrainType.GRASS;
+            worldState[teamspawns[i][0], teamspawns[i][1]] = TerrainType.GRASS;
+            worldState[teamspawns[i][0], teamspawns[i][1]] = TerrainType.GRASS;
+            FindObjectOfType<StructureManager>().putBase(teamspawns[i][0], teamspawns[i][1], i);
         }
-
-        worldState[redSpawn[0],redSpawn[1]] = TerrainType.GRASS;
-        worldState[redSpawn[0]+1, redSpawn[1]] = TerrainType.GRASS;
-        worldState[redSpawn[0], redSpawn[1]+1] = TerrainType.GRASS;
-        worldState[redSpawn[0]+1, redSpawn[1]+1] = TerrainType.GRASS;
-
-        worldState[blueSpawn[0], blueSpawn[1]] = TerrainType.GRASS;
-        worldState[blueSpawn[0] + 1, blueSpawn[1]] = TerrainType.GRASS;
-        worldState[blueSpawn[0], blueSpawn[1] + 1] = TerrainType.GRASS;
-        worldState[blueSpawn[0] + 1, blueSpawn[1] + 1] = TerrainType.GRASS;
-        */
 
         gm.Create(worldState);
 
@@ -209,17 +210,7 @@ public class GameState : MonoBehaviour
                 }
             }
         }
-        // inst. players
 
-        for(int i = 0; i != 4; i++)
-        {
-            var v = makePlayer();
-            players.Add(v.GetComponent<Player>());
-        }
-        /**
-        FindObjectOfType<StructureManager>().putBase(redSpawn[0], redSpawn[1], 'R');
-        FindObjectOfType<StructureManager>().putBase(blueSpawn[0], blueSpawn[1], 'B');
-        */
 
 
     }
